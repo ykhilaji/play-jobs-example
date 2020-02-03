@@ -2,11 +2,8 @@ package actors
 
 import akka.actor._
 import akka.cluster.pubsub.DistributedPubSub
-import akka.cluster.pubsub.DistributedPubSubMediator.{
-  Publish,
-  Subscribe,
-  SubscribeAck
-}
+import akka.cluster.pubsub.DistributedPubSubMediator.Publish
+
 
 import scala.concurrent.duration._
 

@@ -6,7 +6,7 @@ import javax.inject._
 
 import scala.concurrent.duration._
 import akka.NotUsed
-import akka.stream.{ActorMaterializer, Materializer, OverflowStrategy, ThrottleMode}
+import akka.stream.{ Materializer, OverflowStrategy, ThrottleMode}
 import akka.stream.scaladsl.Sink
 import akka.stream.scaladsl.Source
 import play.api.Logger

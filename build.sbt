@@ -41,5 +41,10 @@ libraryDependencies += "com.typesafe.akka" %% "akka-cluster" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-stream" % akkaVersion
 
+libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
+libraryDependencies += "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
+libraryDependencies += "org.awaitility" % "awaitility" % "3.0.0" % Test
+
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 resolvers += "spray repo" at "http://repo.spray.io"
