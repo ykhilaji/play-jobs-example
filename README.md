@@ -25,12 +25,6 @@ var wb = new WebSocket("ws://localhost/<user>/ws") // where user is current user
 
 for simple test use websocket client as chrome-extension  and connect it to the URL :
  ```ws://localhost:9000/<user>/ws```
- 
- Launch the command below to test jobs
-
-
-$ ab -m POST -k -c 2 -n 20 http://localhost:9000/`<user>`/jobs/10
-
 
 ## setup prometheus
 
