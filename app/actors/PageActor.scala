@@ -32,7 +32,6 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
     def receive = {
       case JobManager.TaskComplete(ssid, info) =>
         println(s"task complete: {}, $ssid, $info")
-
         throttler ! info
 
         // case JobManager.JobComplete =>
