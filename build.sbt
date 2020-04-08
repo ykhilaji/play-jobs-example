@@ -1,8 +1,9 @@
+
 name := """play-jobs"""
 
 version := "1.0"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb)
+lazy val root = (project in file(".")).enablePlugins(PlayScala,JavaAgent, SbtWeb)
 
 scalaVersion := "2.12.4"
 
@@ -31,7 +32,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.6.1",
   "com.typesafe.play" %% "play-json-joda" % "2.6.1",
   "com.typesafe.play" %% "play-iteratees" % "2.6.1",
-  "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1"
+  "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1",
+  "io.kamon" %% "kamon-bundle" % "2.0.4",
+  "io.kamon" %% "kamon-prometheus" % "2.0.1",
 
 )
 
