@@ -2,6 +2,7 @@ target/
 boot/
 lib_managed/
 src_managed/
+.metals/
 project/plugins/project/
 .idea
 .DS_Store
