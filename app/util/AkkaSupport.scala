@@ -11,6 +11,7 @@ import javax.inject.Singleton
 import akka.stream.ActorMaterializer
 
 object AkkaSupport {
+  
   implicit val system: ActorSystem = ActorSystem(
     "play-jobs",
     ConfigFactory.load("cluster") withFallback Play.current.configuration.underlying
@@ -19,4 +20,5 @@ object AkkaSupport {
   implicit val materilizer: ActorMaterializer = ActorMaterializer()
 
 }
+
 

@@ -3,6 +3,7 @@ boot/
 lib_managed/
 src_managed/
 .metals/
+.bloop/
 project/plugins/project/
 .idea
 .DS_Store
