@@ -15,7 +15,8 @@ import play.api.mvc._
 import services.JobService
 
 @Singleton
-class JobController @Inject() (jobService: JobService) (implicit system: ActorSystem, ec: ExecutionContext) extends Controller {
+class JobController @Inject() (jobService: JobService,
+    cc: ControllerComponents) (implicit system: ActorSystem, ec: ExecutionContext) extends AbstractController(cc) {
 
   def job(sid: String, tasks: Int) = Action { implicit request: Request[AnyContent] =>
 
