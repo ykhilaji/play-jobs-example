@@ -34,7 +34,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.6.1",
   "com.typesafe.play" %% "play-json-joda" % "2.6.1",
   "com.typesafe.play" %% "play-iteratees" % "2.6.1",
-  "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1"
+  "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1",
+  "com.pauldijou" %% "jwt-play" % "0.19.0",
+  "com.pauldijou" %% "jwt-core" % "0.19.0",
+  "com.auth0" % "jwks-rsa" % "0.6.1" 
 
 )
 

@@ -6,7 +6,6 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
-import util.AkkaSupport
 
 import javax.inject._
 import play.api._
