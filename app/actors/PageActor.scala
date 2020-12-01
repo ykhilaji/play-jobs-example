@@ -10,9 +10,10 @@ import akka.NotUsed
 import akka.stream.{ Materializer, OverflowStrategy}
 import akka.stream.scaladsl.Sink
 import akka.stream.scaladsl.Source
+import akka.stream.CompletionStrategy
+import akka.Done
 
 class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: Materializer) extends Actor with ActorLogging {
-  //import _root_.util.AkkaSupport._
 
   val topic = s"jobs:${sid}"
 
@@ -20,13 +21,19 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
 
   mediator ! Subscribe(topic, self)
 
-  val throttler = Source.actorRef[String](bufferSize = 100000, OverflowStrategy.dropNew)
-    .groupedWithin(100, 3 seconds)
+   val completeWithDone: PartialFunction[Any, CompletionStrategy] = { case Done => CompletionStrategy.immediately }
+
+  val throttler = Source.actorRef[String](
+    completionMatcher = completeWithDone,
+    failureMatcher = PartialFunction.empty,
+    bufferSize = 100000, 
+    OverflowStrategy.dropNew)
+    .groupedWithin(100, 3 seconds) 
     .map((infos: Seq[String]) => Json.obj(
       "type" -> "TasksComplete",
       "info" -> infos
       ))
-    .to(Sink.actorRef(out, NotUsed))
+    .to(Sink.actorRef(out, NotUsed,  ex => "FAILED: " + ex.getMessage))  
     .run()
 
     def receive = {
@@ -35,13 +42,7 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
 
         throttler ! info
 
-        // case JobManager.JobComplete =>
-        //   log.info("job complete {}", sid)
-        //
-        //   out ! Json.obj(
-        //     "type" -> "JobComplete"
-        //   )
-
+        
       case SubscribeAck(Subscribe(`topic`, None, `self`)) ⇒
         log.info("subscribing")
     }

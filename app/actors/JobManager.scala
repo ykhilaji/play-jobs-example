@@ -27,7 +27,7 @@ class JobManager extends Actor with ActorLogging {
 }
 
 object JobManager {
-  sealed trait Msg
+  sealed trait Msg extends core.ActorProtocol
 
   case class TaskComplete(sid: String, info: String) extends Msg
   // case class JobComplete(sid: String)

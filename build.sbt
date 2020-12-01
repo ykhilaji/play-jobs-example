@@ -4,7 +4,7 @@ version := "1.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb)
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.11"
 
 scalacOptions ++= Seq(
   "-feature",
@@ -19,7 +19,7 @@ scalacOptions ++= Seq(
 
 routesGenerator := InjectedRoutesGenerator
 
-val akkaVersion = "2.5.19"
+val akkaVersion = "2.6.10"
 
 
 
@@ -31,6 +31,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.6.1",
   "com.typesafe.play" %% "play-json-joda" % "2.6.1",
   "com.typesafe.play" %% "play-iteratees" % "2.6.1",
+  "io.altoo" %% "akka-kryo-serialization" % "1.1.5",
   "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1"
 
 )
@@ -40,6 +41,3 @@ libraryDependencies += "com.typesafe.akka" %% "akka-slf4j" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-cluster" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-stream" % akkaVersion
-
-resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-resolvers += "spray repo" at "http://repo.spray.io"
