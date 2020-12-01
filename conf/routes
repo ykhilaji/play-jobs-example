@@ -10,11 +10,6 @@ GET     /:sid/ws                    controllers.WebSocketController.ws(sid)
 
 POST    /:sid/jobs/:tasks           controllers.JobController.job(sid, tasks: Int)
  
-GET     /api/ping                   controllers.ApiController.ping
-
-GET     /api/post/:postId           controllers.ApiController.getPost(postId: Int)
-GET     /api/post/:postId/comments  controllers.ApiController.getComments(postId: Int)
-
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -6,7 +6,6 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
-
 import javax.inject._
 import play.api._
 import play.api.mvc._
@@ -14,8 +13,7 @@ import play.api.mvc._
 import services.JobService
 
 @Singleton
-class JobController @Inject() (jobService: JobService,
-    cc: ControllerComponents) (implicit system: ActorSystem, ec: ExecutionContext) extends AbstractController(cc) {
+class JobController @Inject() (jobService: JobService,components: ControllerComponents) (implicit system: ActorSystem, ec: ExecutionContext) extends  AbstractController(components) {
 
   def job(sid: String, tasks: Int) = Action { implicit request: Request[AnyContent] =>
 

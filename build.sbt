@@ -2,13 +2,9 @@ name := """play-jobs"""
 
 version := "1.0"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb,JavaAppPackaging,DockerComposePlugin)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb)
 
 scalaVersion := "2.12.11"
-
-javaOptions in Universal ++= Seq(
-  "-Dpidfile.path=/dev/null"
-)
 
 scalacOptions ++= Seq(
   "-feature",
@@ -23,7 +19,7 @@ scalacOptions ++= Seq(
 
 routesGenerator := InjectedRoutesGenerator
 
-val akkaVersion = "2.5.19"
+val akkaVersion = "2.6.10"
 
 
 libraryDependencies ++= Seq(
@@ -34,10 +30,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.6.1",
   "com.typesafe.play" %% "play-json-joda" % "2.6.1",
   "com.typesafe.play" %% "play-iteratees" % "2.6.1",
-  "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1",
-  "com.pauldijou" %% "jwt-play" % "0.19.0",
-  "com.pauldijou" %% "jwt-core" % "0.19.0",
-  "com.auth0" % "jwks-rsa" % "0.6.1" 
+  "io.altoo" %% "akka-kryo-serialization" % "1.1.5",
+  "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1"
 
 )
 
