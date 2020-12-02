@@ -30,6 +30,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.6.1",
   "com.typesafe.play" %% "play-json-joda" % "2.6.1",
   "com.typesafe.play" %% "play-iteratees" % "2.6.1",
+  "org.julienrf" %% "enum" % "3.1",
   "io.altoo" %% "akka-kryo-serialization" % "1.1.5",
   "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1"
 

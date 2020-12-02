@@ -1,12 +1,11 @@
 package services
 
-import actors.JobManager
 import akka.actor._
 import javax.inject._
 
 import scala.concurrent.duration._
 import akka.NotUsed
-import akka.stream.{ActorMaterializer, Materializer, OverflowStrategy, ThrottleMode}
+import akka.stream.{Materializer, OverflowStrategy, ThrottleMode}
 import akka.stream.scaladsl.Sink
 import akka.stream.scaladsl.Source
 import play.api.Logger
@@ -17,9 +16,18 @@ import scala.concurrent.Future
 import akka.stream.CompletionStrategy
 import akka.Done
 import akka.cluster.pubsub.DistributedPubSub
+import akka.cluster.pubsub.DistributedPubSubMediator.Publish
+import akka.cluster.pubsub.DistributedPubSubMediator
+import actors.PageActor
+import play.api.libs.json.Json
+
+import core.Mock
+import scala.concurrent.ExecutionContext
+import model.TaskModel
+import model.TaskInfra
 
 @Singleton
-class JobService @Inject() (lifecycle: ApplicationLifecycle)(implicit system: ActorSystem, mat: Materializer)  {
+class JobService @Inject() (lifecycle: ApplicationLifecycle)(implicit system: ActorSystem, mat: Materializer, ex: ExecutionContext)  {
 
   val cluster = Cluster(system)
 
@@ -38,13 +46,9 @@ class JobService @Inject() (lifecycle: ApplicationLifecycle)(implicit system: Ac
 
   val completeWithDone: PartialFunction[Any, CompletionStrategy] = { case Done => CompletionStrategy.immediately }
 
-  val jobManager = system actorOf Props(new JobManager())
-
   val pubsub = DistributedPubSub(system).mediator
 
-
-
-  val throttler = Source.actorRef[JobManager.Msg](
+  val rateLimiter = Source.actorRef[DistributedPubSubMediator.Publish](
     completionMatcher = completeWithDone,
     failureMatcher = PartialFunction.empty,
     bufferSize = 100000, 
@@ -55,13 +59,14 @@ class JobService @Inject() (lifecycle: ApplicationLifecycle)(implicit system: Ac
       maximumBurst = 10,
       mode = ThrottleMode.Shaping
     )
-    .to(Sink.actorRef(jobManager, NotUsed, ex => "FAILED: " + ex.getMessage))
+    .to(Sink.actorRef(pubsub, NotUsed, ex => "FAILED: " + ex.getMessage))
     .run()
     
 
-  def onTask(sid: String, info: String) = {
-    throttler ! JobManager.TaskComplete(sid, info)
-
+  def onTask(task: TaskInfra) = {
+    
+    val topic = s"jobs:${task.sid}"
+    rateLimiter ! Publish(topic , PageActor.TaskComplete(task))   
   }
 
 }

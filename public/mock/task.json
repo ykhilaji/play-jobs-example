@@ -1,0 +1,57 @@
+{
+  "id": 69799,
+  "user_id": "yk",
+  "data": {
+    "id": "0aa29674-1019-403f-a5c1-56aaa4dfd0be",
+    "field": [],
+    "retour": false,
+    "command": false,
+    "deleted": false,
+    "collecte": false,
+    "autoPrint": false,
+    "expediteur": {
+      "city": "PARIS",
+      "isPro": true,
+      "company": "ATOS",
+      "zipcode": "75005",
+      "address3": "NEARSHORE",
+      "countryIso": "FR"
+    },
+    "customFields": [],
+    "destinataire": {
+      "city": "ROUBAIX",
+      "name": "Fichier2_CLIENT_10",
+      "isPro": false,
+      "zipcode": "59100",
+      "address3": "casaBlanca1",
+      "countryIso": "FR"
+    },
+    "pluginActive": true,
+    "isReturnByLot": false,
+    "caracteristiques": {
+      "envoi": "5",
+      "isDDP": false,
+      "isCN23": false,
+      "options": {},
+      "poidskg": "0.002",
+      "datedepot": "02/12/2020",
+      "formatColis": "STANDARD",
+      "genererCN23": false,
+      "importateur": {},
+      "retourOption": "Retourner",
+      "genererRetour": false,
+      "nonMachinable": false,
+      "poidsVolumetrique": 0
+    }
+  },
+  "date": null,
+  "job_id": 0,
+  "response": null,
+  "visible": true,
+  "filename": "data copie.txt",
+  "lineNumber": 1,
+  "status": "Submitted",
+  "type": "CheckGenerateLabel",
+  "jobId": 1133,
+  "print_results": null
+}
