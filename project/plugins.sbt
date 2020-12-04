@@ -7,3 +7,5 @@ addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.11")
 
 addSbtPlugin("com.tapad" % "sbt-docker-compose" % "1.0.34")
 
+addSbtPlugin("io.kamon" % "sbt-kanela-runner-play-2.6" % "2.0.6")
+
