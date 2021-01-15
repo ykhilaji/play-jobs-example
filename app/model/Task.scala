@@ -10,10 +10,30 @@ import play.api.mvc.QueryStringBindable
 import model.TaskModel.{JobId, TaskId, UserId}
 import org.joda.time.DateTime
 
+case class TaskInfra(sid: String , info: String , data: JsValue , task: Option[TaskModel])
+
+case class TaskModel(
+                      id: TaskId,
+                      userId: UserId,
+                      userData: Option[JsValue], 
+                      jobId: JobId, 
+                      status: TaskStatus, 
+                      data: EtiquetteModelAdapter, 
+                      taskType: TaskType, 
+                      response: Option[JsValue], 
+                      visible : Boolean, 
+                      date: Option[DateTime],
+                      filename: Option[String], 
+                      lineNumber: Option[Int], 
+                      printResults : Option[JsValue]
+)
+
 object TaskModel {
   type TaskId = Long
   type UserId = String
   type JobId = Long
+
+ 
 
   // Objects/methods used to parse and create JSON
   implicit val taskReads =
@@ -23,7 +43,7 @@ object TaskModel {
         (__ \ "user_data").readNullable[JsValue] and
         (__ \ "job_id").read[JobId] and
         (__ \ "status").read[TaskStatus] and
-        (__ \ "data").read[JsValue] and
+        (__ \ "data").read[EtiquetteModelAdapter] and
         (__ \ "type").read[TaskType] and
         (__ \ "response").readNullable[JsValue] and
         (__ \ "visible").read[Boolean] and
@@ -50,17 +70,16 @@ object TaskModel {
 
 }
 
-case class TaskInfra(sid: String , info: String , data: JsValue , task: Option[TaskModel])
 
 object TaskInfra {
 
   implicit val taskReads = 
    (
       (__ \ "sid").read[String] and
-        (__ \ "info").read[String] and
-        (__ \ "data").read[JsValue] and 
-        ( __ \ "task").readNullable[TaskModel] 
-      ) (TaskInfra.apply _)
+      (__ \ "info").read[String] and
+      (__ \ "data").read[JsValue] and 
+      (__ \ "task").readNullable[TaskModel] 
+   ) (TaskInfra.apply _)
   
   implicit val taskWrites = OWrites[TaskInfra] { task =>
     Json.obj(
@@ -72,21 +91,6 @@ object TaskInfra {
   }    
  }
 
-case class TaskModel(
-                      id: TaskId,
-                      userId: UserId,
-                      userData: Option[JsValue], 
-                      jobId: JobId, 
-                      status: TaskStatus, 
-                      data: JsValue, 
-                      taskType: TaskType, 
-                      response: Option[JsValue], 
-                      visible : Boolean, 
-                      date: Option[DateTime],
-                      filename: Option[String], 
-                      lineNumber: Option[Int], 
-                      printResults : Option[JsValue]
-)
 
 
 

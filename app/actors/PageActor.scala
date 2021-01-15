@@ -5,7 +5,6 @@ import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Subscribe, SubscribeAck}
 
 import scala.concurrent.duration._
-import play.api.libs.json._
 import akka.NotUsed
 import org.joda.time.{ DateTime }
 
@@ -23,11 +22,11 @@ import akka.stream.ActorAttributes
 import akka.stream.Supervision
 import model.TaskModel
 import model.TaskInfra
+import protocol._
 
 
 class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: Materializer) extends Actor with ActorLogging {
-
-  import actors.PageActor._
+  import protocol.Messages._
   val topic = s"jobs:${sid}"
 
   override def preStart(): Unit = {
@@ -85,22 +84,12 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
   def receive = {
     
     case TaskComplete(task) =>
-      println(s"task complete: {}, ${task.sid}, ${task.info}")
-      throttler ! Json.toJson(task)
+      println(s"task complete----------------: {}, ${task.sid}, ${task.info}")
+      out ! Json.toJson(task)
 
       
     case SubscribeAck(Subscribe(`topic`, None, `self`)) ⇒
       log.info("subscribing")
   }
 }
-
-object PageActor {
-
-  sealed trait Msg extends core.ActorProtocol
-
-  final case class TaskComplete(task: TaskInfra) extends Msg
-
-}
-
-
 

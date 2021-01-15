@@ -1,11 +1,17 @@
 import com.google.inject.AbstractModule
 
-import services.JobService
+import services._
+import play.api.Configuration
+import kamon.Kamon
 
 class Module extends AbstractModule {
 
   def configure() = {
-    bind(classOf[JobService]).asEagerSingleton()
+
+   Kamon.init()
+
+    bind(classOf[JobService]).toProvider(classOf[JobServiceProvider])
+
 
   }
 
