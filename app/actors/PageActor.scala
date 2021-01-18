@@ -1,8 +1,7 @@
 package actors
 
 import akka.actor._
-import akka.cluster.pubsub.DistributedPubSub
-import akka.cluster.pubsub.DistributedPubSubMediator.{Subscribe, SubscribeAck}
+
 
 import scala.concurrent.duration._
 import akka.NotUsed
@@ -23,6 +22,12 @@ import akka.stream.Supervision
 import model.TaskModel
 import model.TaskInfra
 import protocol._
+import com.sandinh.paho.akka.MqttPubSub
+import com.sandinh.paho.akka.PSConfig
+import play.api.Logger
+import com.sandinh.paho.akka.Subscribe
+import com.sandinh.paho.akka.SubscribeAck
+import com.sandinh.paho.akka.Message
 
 
 class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: Materializer) extends Actor with ActorLogging {
@@ -30,14 +35,26 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
   val topic = s"jobs:${sid}"
 
   override def preStart(): Unit = {
-    val mediator = DistributedPubSub(context.system).mediator
+    
+  //val mediator = DistributedPubSub(context.system).mediator
 
-    log.info("Subscribing to {}.", topic)
+   val mediator = system.actorOf(Props(classOf[MqttPubSub], PSConfig(
+    brokerUrl = "tcp://test.mosquitto.org:1883", //all params is optional except brokerUrl
+   // userName = null,
+   // password = null,
+    //messages received when disconnected will be stash. Messages isOverdue after stashTimeToLive will be discard
+    stashTimeToLive = 1.minute,
+    stashCapacity = 8000, //stash messages will be drop first haft elems when reach this size
+    reconnectDelayMin = 10.millis, //for fine tuning re-connection logic
+    reconnectDelayMax = 30.seconds
+  )))
+
+    Logger.logger.info("Subscribing to {}.", topic)
     mediator ! Subscribe(topic, self)
   }
 
   override def postStop(): Unit = {
-    log.info("Page actor {} stopped.")
+    Logger.logger.info("Page actor {} stopped.")
     super.postStop()
   }
 
@@ -45,19 +62,19 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
   or an Exception is raised */
   val decider: Supervision.Decider = {
     case e: ActorInitializationException =>
-      log.info("Error during actor initialization", e)
+      Logger.logger.info("Error during actor initialization", e)
       Supervision.Restart
     case e: ActorKilledException => // It should never happen (ie: ActorKilledException is thrown when an Actor receives the akka.actor.Kill message)
-      log.info("Actor got killed", e)
+      Logger.logger.info("Actor got killed", e)
       Supervision.Stop
     case e: DeathPactException => // It should never happen (ie: This exception is thrown when watchers send a terminated message)
-      log.info("Actor noticed death pact", e)
+      Logger.logger.info("Actor noticed death pact", e)
       Supervision.Stop
     case e: Exception =>
-      log.info("Unexpected exception, restarting", e)
+      Logger.logger.info("Unexpected exception, restarting", e)
       Supervision.Resume
     case t =>
-      log.info("Received throwable", t)
+      Logger.logger.info("Received throwable", t)
       Supervision.Stop
   }
 
@@ -81,15 +98,23 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
     .run()
 
 
-  def receive = {
+ override def receive = {
     
     case TaskComplete(task) =>
-      println(s"task complete----------------: {}, ${task.sid}, ${task.info}")
+      Logger.logger.info(s"task complete----------------: {}, ${task.sid}, ${task.info}")
       out ! Json.toJson(task)
 
-      
-    case SubscribeAck(Subscribe(`topic`, None, `self`)) ⇒
-      log.info("subscribing")
-  }
+    case SubscribeAck(Subscribe(`topic`, `self`, _), fail) =>
+      if (fail.isEmpty) context become ready
+      else println(fail.get, s"Can't subscribe to $topic")
+}
+
+def ready : Receive = {
+  case msg: Message => 
+    val work = core.Utils.readFromByteArray[TaskComplete](msg.payload)
+     Logger.logger.info(s"task complete----------------: {}, ${work.task.sid}, ${work.task.info}")
+    throttler ! Json.toJson( work.task)
+}
+
 }
 

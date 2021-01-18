@@ -15,9 +15,6 @@ import akka.cluster.Cluster
 import scala.concurrent.Future
 import akka.stream.CompletionStrategy
 import akka.Done
-import akka.cluster.pubsub.DistributedPubSub
-import akka.cluster.pubsub.DistributedPubSubMediator.Publish
-import akka.cluster.pubsub.DistributedPubSubMediator
 import actors.PageActor
 import play.api.libs.json.Json
 
@@ -26,6 +23,9 @@ import scala.concurrent.ExecutionContext
 import model.TaskModel
 import model.TaskInfra
 import redis.RedisClient
+import com.sandinh.paho.akka.MqttPubSub
+import com.sandinh.paho.akka.PSConfig
+import com.sandinh.paho.akka.Publish
 
 trait JobService {
 
@@ -52,9 +52,21 @@ class JobServiceDPSImpl @Inject() (lifecycle: ApplicationLifecycle)(implicit sys
 
   val completeWithDone: PartialFunction[Any, CompletionStrategy] = { case Done => CompletionStrategy.immediately }
 
-  val pubsub = DistributedPubSub(system).mediator
+  //val pubsub = DistributedPubSub(system).mediator
 
-  val rateLimiter = Source.actorRef[DistributedPubSubMediator.Publish](
+  val pubsub = system.actorOf(Props(classOf[MqttPubSub], PSConfig(
+    brokerUrl = "tcp://test.mosquitto.org:1883", //all params is optional except brokerUrl
+   // userName = null,
+   // password = null,
+    //messages received when disconnected will be stash. Messages isOverdue after stashTimeToLive will be discard
+    stashTimeToLive = 1.minute,
+    stashCapacity = 8000, //stash messages will be drop first haft elems when reach this size
+    reconnectDelayMin = 10.millis, //for fine tuning re-connection logic
+    reconnectDelayMax = 30.seconds
+  )))
+
+
+  val rateLimiter = Source.actorRef[Publish](
     completionMatcher = completeWithDone,
     failureMatcher = PartialFunction.empty,
     bufferSize = 100000, 
@@ -73,7 +85,10 @@ class JobServiceDPSImpl @Inject() (lifecycle: ApplicationLifecycle)(implicit sys
     import protocol.Messages.TaskComplete
     Logger.logger.info(s"task id ======== ${task.task.map(_.id)}")
     val topic = s"jobs:${task.sid}"
-    rateLimiter ! Publish(topic , TaskComplete(task))   
+  
+    val payload = core.Utils.writeToByteArray(TaskComplete(task))
+
+    rateLimiter ! Publish(topic , payload)   
   }
 
 }

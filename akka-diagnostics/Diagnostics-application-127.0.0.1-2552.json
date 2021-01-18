@@ -1,0 +1,474 @@
+{
+  "start-time" : "2021-01-15T22:51:15.689",
+  "akka-version" : "2.6.10",
+  "akka-diagnostics-version" : "1.1.16",
+  "akka-http-version" : "10.1.10",
+  "classpath" : "/Users/yassine/Desktop/coliship/play-jobs-example/target/scala-2.12/classes/",
+  "configuration-warnings" : [
+    {
+      "checker-key" : "dispatcher-count",
+      "message" : "You have configured [8] different custom dispatchers. Do you really need that many dispatchers? Separating into CPU bound tasks and blocking (IO) tasks are often enough.",
+      "properties" : "remote.classic.backoff-remote-dispatcher, task-stream-dispatcher, actor.default-dispatcher, actor.default-blocking-io-dispatcher, actor.internal-dispatcher, diagnostics.recorder.dispatcher, io.pinned-dispatcher, remote.default-remote-dispatcher",
+      "defaults" : ""
+    }],
+  "system-metrics" : {
+    "heap-init" : 2147483648,
+    "heap-max" : 2044198912,
+    "heap-used" : 514666504,
+    "heap-committed" : 2044198912,
+    "os-processors" : 8,
+    "mem-pool-0" : {
+      "name" : "Code Cache",
+      "type" : "Non-heap memory",
+      "init" : 2555904,
+      "max" : 268435456,
+      "used" : 39454080,
+      "committed" : 40108032
+    },
+    "mem-pool-1" : {
+      "name" : "Metaspace",
+      "type" : "Non-heap memory",
+      "init" : 0,
+      "max" : 536870912,
+      "used" : 166109696,
+      "committed" : 188440576
+    },
+    "mem-pool-2" : {
+      "name" : "Compressed Class Space",
+      "type" : "Non-heap memory",
+      "init" : 0,
+      "max" : 528482304,
+      "used" : 24359648,
+      "committed" : 25649152
+    },
+    "mem-pool-3" : {
+      "name" : "PS Eden Space",
+      "type" : "Heap memory",
+      "init" : 537395200,
+      "max" : 616038400,
+      "used" : 396427752,
+      "committed" : 580386816
+    },
+    "mem-pool-4" : {
+      "name" : "PS Survivor Space",
+      "type" : "Heap memory",
+      "init" : 89128960,
+      "max" : 31981568,
+      "used" : 0,
+      "committed" : 31981568
+    },
+    "mem-pool-5" : {
+      "name" : "PS Old Gen",
+      "type" : "Heap memory",
+      "init" : 1431830528,
+      "max" : 1431830528,
+      "used" : 118238752,
+      "committed" : 1431830528
+    }
+  },
+  "configuration" : {
+    "actor" : {
+        "allow-java-serialization" : "off",
+        "default-dispatcher" : {
+            "fork-join-executor" : {
+                "parallelism-factor" : 1,
+                "parallelism-max" : 24,
+                "task-peeking-mode" : "LIFO"
+            }
+        },
+        "provider" : "cluster",
+        "serialization-bindings" : {
+            "core.ActorProtocol" : "kryo-serializer"
+        },
+        "serializers" : {
+            "kryo-serializer" : "io.altoo.akka.serialization.kryo.KryoSerializer"
+        },
+        "warn-about-java-serializer-usage" : "on"
+    },
+    "akka" : {
+        "actor" : {
+            "allow-java-serialization" : "off",
+            "default-dispatcher" : {
+                "fork-join-executor" : {
+                    "parallelism-factor" : 1,
+                    "parallelism-max" : 24,
+                    "task-peeking-mode" : "LIFO"
+                }
+            },
+            "provider" : "cluster",
+            "serialization-bindings" : {
+                "core.ActorProtocol" : "kryo-serializer"
+            },
+            "serializers" : {
+                "kryo-serializer" : "io.altoo.akka.serialization.kryo.KryoSerializer"
+            },
+            "warn-about-java-serializer-usage" : "on"
+        },
+        "cluster" : {
+            "downing-provider-class" : "akka.cluster.sbr.SplitBrainResolverProvider",
+            "seed-nodes" : [
+                "akka://application@127.0.0.1:2551",
+                "akka://application@127.0.0.1:2552"
+            ],
+            "split-brain-resolver" : {
+                "active-strategy" : "keep-majority"
+            }
+        },
+        "coordinated-shutdown" : {
+            "exit-jvm" : "off",
+            "run-by-jvm-shutdown-hook" : "off",
+            "terminate-actor-system" : "on"
+        },
+        "extensions" : [
+            "akka.cluster.pubsub.DistributedPubSub"
+        ],
+        "http" : {
+            "version" : "10.1.10"
+        },
+        "jvm-exit-on-fatal-error" : true,
+        "jvm-shutdown-hooks" : "off",
+        "log-dead-letters" : "off",
+        "loggers" : [
+            "akka.event.slf4j.Slf4jLogger"
+        ],
+        "logging-filter" : "akka.event.slf4j.Slf4jLoggingFilter",
+        "loglevel" : "DEBUG",
+        "management" : {
+            "http" : {
+                "hostname" : "127.0.0.1",
+                "port" : "8559",
+                "route-providers-read-only" : false
+            }
+        },
+        "remote" : {
+            "artery" : {
+                "canonical" : {
+                    "hostname" : "127.0.0.1",
+                    "port" : "2552"
+                },
+                "enabled" : "on",
+                "transport" : "tcp"
+            }
+        },
+        "version" : "2.6.10"
+    },
+    "akka-kryo-serialization" : {
+        "id-strategy" : "default",
+        "implicit-registration-logging" : true,
+        "kryo-trace" : false,
+        "post-serialization-transformations" : "lz4",
+        "type" : "graph"
+    },
+    "awt" : {
+        "toolkit" : "sun.lwawt.macosx.LWCToolkit"
+    },
+    "cluster" : {
+        "downing-provider-class" : "akka.cluster.sbr.SplitBrainResolverProvider",
+        "seed-nodes" : [
+            "akka://application@127.0.0.1:2551",
+            "akka://application@127.0.0.1:2552"
+        ],
+        "split-brain-resolver" : {
+            "active-strategy" : "keep-majority"
+        }
+    },
+    "coordinated-shutdown" : {
+        "exit-jvm" : "off",
+        "run-by-jvm-shutdown-hook" : "off",
+        "terminate-actor-system" : "on"
+    },
+    "excluded-sensitive-paths" : [
+        "user.home",
+        "ftp.nonProxyHosts",
+        "user.dir",
+        "http.nonProxyHosts",
+        "socksNonProxyHosts",
+        "user.name"
+    ],
+    "extensions" : [
+        "akka.cluster.pubsub.DistributedPubSub"
+    ],
+    "file" : {
+        "encoding" : {
+            "pkg" : "sun.io"
+        },
+        "separator" : "/"
+    },
+    "ftp" : {},
+    "gopherProxySet" : "false",
+    "http" : {
+        "port" : "9001",
+        "version" : "10.1.10"
+    },
+    "java" : {
+        "awt" : {
+            "graphicsenv" : "sun.awt.CGraphicsEnvironment",
+            "printerjob" : "sun.lwawt.macosx.CPrinterJob"
+        },
+        "class" : {
+            "path" : "/usr/local/Cellar/sbt/1.2.8/libexec/bin/sbt-launch.jar",
+            "version" : "52.0"
+        },
+        "endorsed" : {
+            "dirs" : "/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/endorsed"
+        },
+        "ext" : {
+            "dirs" : "/Users/yassine/Library/Java/Extensions:/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/ext:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java"
+        },
+        "home" : "/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre",
+        "io" : {
+            "tmpdir" : "/var/folders/j9/bbxl5cjj6kq74d1z5bb06pc40000gp/T/"
+        },
+        "library" : {
+            "path" : "/Users/yassine/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."
+        },
+        "runtime" : {
+            "name" : "Java(TM) SE Runtime Environment",
+            "version" : "1.8.0_162-b12"
+        },
+        "specification" : {
+            "name" : "Java Platform API Specification",
+            "vendor" : "Oracle Corporation",
+            "version" : "1.8"
+        },
+        "vendor" : {
+            "url" : {
+                "bug" : "http://bugreport.sun.com/bugreport/"
+            }
+        },
+        "version" : "1.8.0_162",
+        "vm" : {
+            "info" : "mixed mode",
+            "name" : "Java HotSpot(TM) 64-Bit Server VM",
+            "specification" : {
+                "name" : "Java Virtual Machine Specification",
+                "vendor" : "Oracle Corporation",
+                "version" : "1.8"
+            },
+            "vendor" : "Oracle Corporation",
+            "version" : "25.162-b12"
+        }
+    },
+    "jline" : {
+        "esc" : {
+            "timeout" : "0"
+        },
+        "shutdownhook" : "false"
+    },
+    "jna" : {
+        "loaded" : "true",
+        "nosys" : "true",
+        "platform" : {
+            "library" : {
+                "path" : "/usr/lib:/usr/lib"
+            }
+        }
+    },
+    "jnidispatch" : {
+        "path" : "/var/folders/j9/bbxl5cjj6kq74d1z5bb06pc40000gp/T/jna--1394441352/jna2264387063727570044.tmp"
+    },
+    "jvm-exit-on-fatal-error" : true,
+    "jvm-shutdown-hooks" : "off",
+    "kamon" : {
+        "akka" : {
+            "ask-pattern-timeout-warning" : "lightweight"
+        },
+        "instrumentation" : {
+            "akka" : {
+                "filters" : {
+                    "actors" : {
+                        "doomsday-wildcard" : "on",
+                        "track" : {
+                            "excludes" : [],
+                            "includes" : []
+                        }
+                    },
+                    "dispatchers" : {
+                        "includes" : [
+                            "akka.actor.default-dispatcher",
+                            "task-stream-dispatcher",
+                            "pubsub-dispatcher"
+                        ]
+                    },
+                    "routers" : {
+                        "includes" : [
+                            "**"
+                        ]
+                    }
+                },
+                "http" : {
+                    "client" : {
+                        "propagation" : {
+                            "channel" : "default",
+                            "enabled" : "yes"
+                        }
+                    },
+                    "server" : {
+                        "propagation" : {
+                            "channel" : "default",
+                            "enabled" : "yes"
+                        },
+                        "tracing" : {
+                            "operations" : {
+                                "default" : "unknown"
+                            },
+                            "response-headers" : {
+                                "span-id" : "none",
+                                "trace-id" : "none"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "modules" : {
+            "host-metrics" : {
+                "enabled" : false
+            },
+            "jvm-metrics" : {
+                "enabled" : "no"
+            },
+            "status-page" : {
+                "enabled" : false
+            }
+        },
+        "prometheus" : {
+            "embedded-server" : {
+                "hostname" : "0.0.0.0",
+                "port" : "9096"
+            },
+            "start-embedded-http-server" : true
+        }
+    },
+    "kanela" : {
+        "loaded" : "true"
+    },
+    "line" : {
+        "separator" : "\n"
+    },
+    "log-dead-letters" : "off",
+    "log4j" : {
+        "ignoreTCL" : "true"
+    },
+    "loggers" : [
+        "akka.event.slf4j.Slf4jLogger"
+    ],
+    "logging-filter" : "akka.event.slf4j.Slf4jLoggingFilter",
+    "loglevel" : "DEBUG",
+    "management" : {
+        "http" : {
+            "hostname" : "127.0.0.1",
+            "port" : "8559",
+            "route-providers-read-only" : false
+        }
+    },
+    "os" : {
+        "arch" : "x86_64",
+        "name" : "Mac OS X",
+        "version" : "10.14.3"
+    },
+    "path" : {
+        "separator" : ":"
+    },
+    "play" : {
+        "akka" : {
+            "dev-mode" : {
+                "akka" : {
+                    "log-dead-letters" : "off"
+                }
+            }
+        },
+        "filters" : {
+            "headers" : {
+                "contentSecurityPolicy" : "connect-src 'self' ws://localhost:8080"
+            },
+            "hosts" : {
+                "allowed" : [
+                    "localhost:8080",
+                    "localhost:9000",
+                    "localhost:9001",
+                    "localhost"
+                ]
+            }
+        },
+        "server" : {
+            "dir" : "/Users/yassine/Desktop/coliship/play-jobs-example"
+        }
+    },
+    "remote" : {
+        "artery" : {
+            "canonical" : {
+                "hostname" : "127.0.0.1",
+                "port" : "2552"
+            },
+            "enabled" : "on",
+            "transport" : "tcp"
+        }
+    },
+    "sun" : {
+        "arch" : {
+            "data" : {
+                "model" : "64"
+            }
+        },
+        "boot" : {
+            "class" : {
+                "path" : "/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/classes"
+            },
+            "library" : {
+                "path" : "/Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home/jre/lib"
+            }
+        },
+        "cpu" : {
+            "endian" : "little",
+            "isalist" : ""
+        },
+        "io" : {
+            "unicode" : {
+                "encoding" : "UnicodeBig"
+            }
+        },
+        "java" : {
+            "command" : "/usr/local/Cellar/sbt/1.2.8/libexec/bin/sbt-launch.jar ~run -Dhttp.port=9001 -Dakka.remote.artery.canonical.port=2552  -Dkamon.prometheus.embedded-server.port=9096 -Dakka.management.http.port=8559",
+            "launcher" : "SUN_STANDARD"
+        },
+        "jnu" : {
+            "encoding" : "UTF-8"
+        },
+        "management" : {
+            "compiler" : "HotSpot 64-Bit Tiered Compilers"
+        },
+        "os" : {
+            "patch" : {
+                "level" : "unknown"
+            }
+        }
+    },
+    "swoval" : {
+        "tmpdir" : "/Users/yassine/.sbt/1.0"
+    },
+    "task-stream-dispatcher" : {
+        "executor" : "fork-join-executor",
+        "fork-join-executor" : {
+            "parallelism-factor" : 3,
+            "parallelism-max" : 64,
+            "parallelism-min" : 8
+        },
+        "shutdown-timeout" : "1s",
+        "throughput" : 5,
+        "type" : "Dispatcher"
+    },
+    "user" : {
+        "country" : "FR",
+        "language" : "fr",
+        "timezone" : "Europe/Luxembourg"
+    },
+    "version" : "2.6.10",
+    "websocket" : {
+        "redis" : {
+            "enabled" : false
+        }
+    }
+}
+}
+

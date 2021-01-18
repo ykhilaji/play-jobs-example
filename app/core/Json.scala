@@ -6,6 +6,10 @@ import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.i18n.{ Lang }
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectOutputStream
+import java.io.ObjectInputStream
 
 
 object JsonImplicits {
@@ -57,4 +61,39 @@ object OptionJsonImplicit {
 
 object JsonExtensions {
   def withDefault[A](key:String, default:A)(implicit writes:Writes[A]) = __.json.update((__ \ key).json.copyFrom((__ \ key).json.pick orElse Reads.pure(Json.toJson(default))))
+}
+
+object Utils {
+
+  // Serialize object to byte array
+  def writeToByteArray(obj: Any): Array[Byte] = {
+    val baos = new ByteArrayOutputStream
+    val oos = new ObjectOutputStream(baos)
+    try {
+      oos.writeObject(obj)
+      baos.toByteArray
+    } finally {
+      try {
+        oos.close
+      } catch {
+        case _: Throwable => // Do nothing
+      }
+    }
+  }
+
+  // Deserialize object from byte array
+  def readFromByteArray[A](bytes: Array[Byte]): A = {
+    val bais = new ByteArrayInputStream(bytes)
+    val ois = new ObjectInputStream(bais)
+    try {
+      val obj = ois.readObject
+      obj.asInstanceOf[A]
+    } finally {
+      try {
+        ois.close
+      } catch {
+        case _: Throwable => // Do nothing
+      }
+    }
+  }
 }

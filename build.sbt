@@ -2,7 +2,7 @@ name := """play-jobs"""
 
 version := "1.0"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, JavaAgent, SbtWeb)
 
 scalaVersion := "2.12.11"
 
@@ -34,15 +34,11 @@ libraryDependencies ++= Seq(
   "org.julienrf" %% "enum" % "3.1",
   "ai.x" %% "play-json-extensions" % "0.10.0",
   "io.altoo" %% "akka-kryo-serialization" % "1.1.5",
- // "io.kamon" %% "kamon-bundle" % "2.0.4",
-  //"io.kamon" %% "kamon-prometheus" % "2.0.1",
-  Dependencies.KamonBundle,
-  //Dependencies.KamonSystemMetrics,
-  Dependencies.kamonPrometheus,
- // Dependencies.kamonAkka,
+  "io.kamon" %% "kamon-bundle" % "2.0.4",
+  "io.kamon" %% "kamon-prometheus" % "2.0.1",
   "com.github.etaty" %% "rediscala" % "1.8.0",
+  "com.sandinh" %% "paho-akka" % "1.6.0",
   "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1"
-
 )
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % akkaVersion
