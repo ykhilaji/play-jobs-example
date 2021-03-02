@@ -7,7 +7,6 @@
 GET     /                           controllers.HomeController.index
 
 GET     /:sid/ws                    controllers.WebSocketController.ws(sid)
-GET     /:sid/wsRedis               controllers.WebSocketController.wsRedis(sid)
 
 
 POST    /:sid/jobs/:tasks           controllers.JobController.job(sid, tasks: Int)

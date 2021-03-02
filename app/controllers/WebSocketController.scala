@@ -10,9 +10,6 @@ import play.api.mvc._
 import websockets.WebSocketUtil
 
 import scala.concurrent.ExecutionContext
-import actors.PageRedisActor
-import redis.RedisClient
-import java.util.concurrent.Future
 import play.api.mvc._
 import play.libs.streams.ActorFlow
 import protocol._
@@ -20,18 +17,10 @@ import protocol._
 @Singleton
 class WebSocketController @Inject()(wsClient: WSClient, 
                                     components: ControllerComponents)(implicit system: ActorSystem, ec: ExecutionContext, mat: Materializer) extends AbstractController(components) {
-
-  val redis = RedisClient()
   
   def ws(sid: String) = WebSocketUtil.get[JsValue] { (out: ActorRef) ⇒
 
     Props(new PageActor(sid, out))
-  }
-
-
-   def wsRedis(sid: String) = WebSocketUtil.getRedis[String] { ( out: ActorRef) ⇒
-
-    Props(new PageRedisActor(redis, out, Seq(sid), Nil))
   }
 
  

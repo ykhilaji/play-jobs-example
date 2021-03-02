@@ -25,7 +25,6 @@ import core._
 import scala.concurrent.ExecutionContext
 import model.TaskModel
 import model.TaskInfra
-import redis.RedisClient
 
 trait JobService {
 
@@ -70,30 +69,15 @@ class JobServiceDPSImpl @Inject() (lifecycle: ApplicationLifecycle)(implicit sys
     
 
   def onTask(task: TaskInfra) = {
-    import protocol.Messages.TaskComplete
-    Logger.logger.info(s"task id ======== ${task.task.map(_.id)}")
+    import protocol.TaskComplete
     val topic = s"jobs:${task.sid}"
     rateLimiter ! Publish(topic , TaskComplete(task))   
   }
 
 }
 
-@Singleton
-class JobServiceRedisImpl @Inject() (lifecycle: ApplicationLifecycle)(implicit system: ActorSystem) extends JobService  {
- 
-  val redis = RedisClient()
-    
-  def onTask(task: TaskInfra) = {
-     
-    val channel = task.sid
- 
-    redis.publish(channel,task.info)
-  }
-  
-
-}
 
 @Singleton 
-class JobServiceProvider @Inject()(lifecycle: ApplicationLifecycle, conf: Conf)(implicit system: ActorSystem,mat: Materializer, ex: ExecutionContext) extends javax.inject.Provider[JobService] {
-  lazy val get: JobService = if (conf.websocket.redisEnabled) new JobServiceRedisImpl(lifecycle) else new JobServiceDPSImpl(lifecycle)
+class JobServiceProvider @Inject()(lifecycle: ApplicationLifecycle)(implicit system: ActorSystem,mat: Materializer, ex: ExecutionContext) extends javax.inject.Provider[JobService] {
+  lazy val get: JobService =  new JobServiceDPSImpl(lifecycle)
 }

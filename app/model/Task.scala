@@ -7,18 +7,19 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.mvc.QueryStringBindable
-import model.TaskModel.{JobId, TaskId, UserId}
 import org.joda.time.DateTime
+import model._
 
-case class TaskInfra(sid: String , info: String , data: JsValue , task: Option[TaskModel])
+
+case class TaskInfra(sid: String , info: String , data: JsValue , task: Option[TaskModel]) extends protocol.PlayJsonSerializer 
 
 case class TaskModel(
-                      id: TaskId,
-                      userId: UserId,
+                      id: Long,
+                      userId: String,
                       userData: Option[JsValue], 
-                      jobId: JobId, 
+                      jobId: Long, 
                       status: TaskStatus, 
-                      data: EtiquetteModelAdapter, 
+                      data: JsValue, 
                       taskType: TaskType, 
                       response: Option[JsValue], 
                       visible : Boolean, 
@@ -26,7 +27,7 @@ case class TaskModel(
                       filename: Option[String], 
                       lineNumber: Option[Int], 
                       printResults : Option[JsValue]
-)
+) extends protocol.PlayJsonSerializer
 
 object TaskModel {
   type TaskId = Long
@@ -43,7 +44,7 @@ object TaskModel {
         (__ \ "user_data").readNullable[JsValue] and
         (__ \ "job_id").read[JobId] and
         (__ \ "status").read[TaskStatus] and
-        (__ \ "data").read[EtiquetteModelAdapter] and
+        (__ \ "data").read[JsValue] and
         (__ \ "type").read[TaskType] and
         (__ \ "response").readNullable[JsValue] and
         (__ \ "visible").read[Boolean] and

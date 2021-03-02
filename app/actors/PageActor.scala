@@ -26,7 +26,6 @@ import protocol._
 
 
 class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: Materializer) extends Actor with ActorLogging {
-  import protocol.Messages._
   val topic = s"jobs:${sid}"
 
   override def preStart(): Unit = {
@@ -82,7 +81,6 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
 
 
   def receive = {
-    
     case TaskComplete(task) =>
       println(s"task complete----------------: {}, ${task.sid}, ${task.info}")
       out ! Json.toJson(task)
