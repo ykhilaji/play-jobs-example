@@ -254,27 +254,6 @@ object Field {
 
 sealed trait EtiquetteModel
 
-/**
-object EtiquetteModel {
-   implicit object Writes extends Writes[EtiquetteModel] {
-    override def writes(o: EtiquetteModel): JsValue = {
-      o match {
-        case i: EtiquetteModelAdapter => EtiquetteModelAdapter.format.writes(i)
-        case x => sys.error("type not found " + o)
-      }
-    }
-  }
-   implicit object Reads extends Reads[EtiquetteModel] {
-    override def reads(json: JsValue): JsResult[EtiquetteModel] = {
-      val msgType = (json \ "id").as[Long]
-      msgType match {
-        case value => EtiquetteModelAdapter.format.reads(json)
-      }
-    }
-  }
-}
-*/
-
 case class EtiquetteModelAdapter(
                       expediteur: Option[AddressModel],
                       destinataire: Option[AddressModel],

@@ -28,7 +28,6 @@ class JobController @Inject() (mock: Mock,jobService: JobService,components: Con
 
         akka.pattern.after(500 millis, using = system.scheduler) {
           val dateFuture = mock.loadJson("task.json")
-
           for {
             data <- dateFuture
           } yield {
@@ -36,7 +35,7 @@ class JobController @Inject() (mock: Mock,jobService: JobService,components: Con
             case JsSuccess(value, path) => Some(value)
             case JsError(errors) => println(errors); None
           }         
-          val taskInfra = TaskInfra(sid, s"task $i complet ", Json.toJson("sid"), None)
+          val taskInfra = TaskInfra(sid, s"task $i complet ", Json.toJson("sid"), task)
 
           Future.successful{
             jobService.onTask(taskInfra)

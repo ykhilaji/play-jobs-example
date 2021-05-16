@@ -11,7 +11,7 @@ import org.joda.time.DateTime
 import model._
 
 
-case class TaskInfra(sid: String , info: String , data: JsValue , task: Option[TaskModel]) extends protocol.PlayJsonSerializer 
+case class TaskInfra(sid: String , info: String , data: JsValue , task: Option[TaskModel])
 
 case class TaskModel(
                       id: Long,
@@ -27,7 +27,7 @@ case class TaskModel(
                       filename: Option[String], 
                       lineNumber: Option[Int], 
                       printResults : Option[JsValue]
-) extends protocol.PlayJsonSerializer
+)
 
 object TaskModel {
   type TaskId = Long
