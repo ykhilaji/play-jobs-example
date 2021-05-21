@@ -35,10 +35,11 @@ class JobController @Inject() (mock: Mock,jobService: JobService,components: Con
             case JsSuccess(value, path) => Some(value)
             case JsError(errors) => println(errors); None
           }         
-          val taskInfra = TaskInfra(sid, s"task $i complet ", Json.toJson("sid"), task)
+          val taskInfra = TaskInfra(sid, s"task $i complet ", Json.toJson(s"${sid}"), task)
 
-          Future.successful{
-            jobService.onTask(taskInfra)
+          Future.successful {
+             jobService.onTask(sid, taskInfra)
+           // jobService.onTest(userId = sid)
           }
           }
         }
@@ -48,4 +49,6 @@ class JobController @Inject() (mock: Mock,jobService: JobService,components: Con
 
     NoContent
   }
+
+  
 }

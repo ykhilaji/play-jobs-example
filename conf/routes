@@ -7,9 +7,15 @@
 GET     /                           controllers.HomeController.index
 
 GET     /:sid/ws                    controllers.WebSocketController.ws(sid)
+GET     /:sid/ws2                   controllers.WebSocketController.ws2(sid)
+GET     /connect                    controllers.WebSocketController.connect
 
 
 POST    /:sid/jobs/:tasks           controllers.JobController.job(sid, tasks: Int)
+
+
+
+POST    /broadcast                  controllers.JobShardingController.broadcast
  
 
 # Map static resources from the /public folder to the /assets URL path

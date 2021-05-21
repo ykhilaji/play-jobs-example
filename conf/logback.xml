@@ -33,6 +33,14 @@
   <logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="OFF" />
   <logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF" />
   <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF" />
+  <logger name="controllers.AssetsConfiguration" level="OFF" />
+  <logger name="controllers" level="DEBUG" />
+  <logger name="models" level="DEBUG" />
+  <logger name="core" level="DEBUG" />
+  <logger name="services" level="DEBUG" />
+  <logger name="services.sockets" level="DEBUG" />
+  <logger name="services.actors" level="DEBUG" />
+  <logger name="services.actors.messages" level="DEBUG" />
 
   <root level="WARN">
     <appender-ref ref="ASYNCFILE" />

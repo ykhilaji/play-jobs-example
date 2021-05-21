@@ -46,4 +46,5 @@ libraryDependencies += "com.typesafe.akka" %% "akka-slf4j" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-cluster" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-stream" % akkaVersion
+libraryDependencies += "com.typesafe.akka" %% "akka-cluster-sharding" % akkaVersion
 

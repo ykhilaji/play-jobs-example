@@ -1,5 +1,228 @@
 @()
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@main("Play WebSocket") {
+
+<h1 class="text-primary" style="font-size:24px;padding-bottom:1.5em;">Play WebSocket</h1>
+
+<div style="margin-bottom: 20px; width: 200px; ">
+    <input id="user-input" type="text" class="form-control" placeholder="user id or nickname " aria-label="user id or nickname"
+           aria-describedby="button-addon2">
+</div>
+
+<div id="ws-config" style="float: left; width: 300px;">
+
+    <strong>Connect:</strong>
+    <input id="connect-input" type="text" class="form-control" placeholder="ws url" aria-label="ws url"
+           aria-describedby="button-addon2">
+    <div style="padding-top:0.5em;">
+        <button id="connect-button" class="btn btn-primary btn-sm">Connect</button>
+        <button id="disconnect-button" class="btn btn-secondary btn-sm">Disconnect</button>
+    </div>
+
+    <form style="padding-top:1.5em;">
+        <div class="form-group">
+            <strong>Message:</strong>
+            <textarea id="message-input" class="form-control"></textarea>
+        </div>
+        <button id="send-button" type="button" class="btn btn-primary btn-sm">Send</button>
+    </form>
+</div>
+
+<!-- this is where the client and server output will be shown/appended -->
+<!--<div id="message-content"-->
+<!--     style="float: left; margin-left: 20px;height:230px;overflow-y:auto !important;background-color:#fff;padding:1em;border-radius:10px;"></div>-->
+
+<div id="message"
+     style="float: left; margin-left: 20px; padding-left: 20px; width: 650px; border-left: solid 1px #cccccc;">
+    <strong>Log:</strong>
+    <div id="message-content"
+         style="margin-top: 10px; height:230px;overflow-y:auto !important;background-color:#fff;padding:1em;border-radius:10px;"></div>
+<!--    <button class="btn btn-warning btn-sm" id="clear-button" style="position: relative; margin-top: 10px;">Clear-->
+<!--    </button>-->
+</div>
+
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    var userId;
+    var wsUrl;
+    var webSocket;
+    var messageInput;
+    var heartbeatInterval;
+    var websocketPath = "ws2"
+    var urlWs = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}${location.pathname}${websocketPath}`;
+
+
+    function init() {
+<!--        webSocket = new WebSocket(urlWs);-->
+<!--        webSocket.onopen = onOpen;-->
+<!--        webSocket.onclose = onClose;-->
+<!--        webSocket.onmessage = onMessage;-->
+<!--        webSocket.onerror = onError;-->
+<!--        $("#message-input").focus();-->
+         wsUrlInput = $("#connect-input").val();
+        // put focus back in the textarea
+
+        if ($.trim(wsUrlInput) == "") {
+            wsUrl = "ws://localhost:9000/connect";
+            $("#connect-input").val(wsUrl);
+        }
+
+        userIdInput = $("#user-input").val();
+        // put focus back in the textarea
+
+        if ($.trim(wsUrlInput) == "") {
+            userId = 25500 + Math.ceil(Math.random()*10);
+            $("#user-input").val(userId);
+        }
+    }
+
+    function connect(url) {
+        webSocket = new WebSocket(url);
+        webSocket.onopen = onOpen;
+        webSocket.onclose = onClose;
+        webSocket.onmessage = onMessage;
+        webSocket.onerror = onError;
+        $("#message-input").focus();
+    }
+
+    function onOpen(event) {
+        consoleLog("CONNECTED");
+        appendClientMessageToView(":", "CONNECTED");
+        // heartbeatInterval = window.setInterval(() => { sendToServer('PING') }, 3000);
+    }
+
+    function onClose(event) {
+        webSocket == null;
+        consoleLog("DISCONNECTED");
+        appendClientMessageToView(":", "DISCONNECTED");
+        clearInterval(heartbeatInterval);
+    }
+
+    function onError(event) {
+        consoleLog("ERROR: " + event.data);
+        consoleLog("ERROR: " + JSON.stringify(event));
+    }
+
+    function onMessage(event) {
+        console.log(event.data);
+        let receivedData = JSON.parse(event.data);
+        console.log("New Data: ", receivedData);
+        // get the text from the "body" field of the json we
+        // receive from the server.
+        appendServerMessageToView("Server", JSON.stringify(receivedData));
+    }
+
+    function appendClientMessageToView(title, message) {
+        $("#message-content").append("<span>" + title + ": " + message + "<br /></span>");
+    }
+
+    function appendServerMessageToView(title, message) {
+        $("#message-content").append("<span>" + title + ": " + message + "<br /><br /></span>");
+    }
+
+    function consoleLog(message) {
+        console.log("New message: ", message);
+    }
+
+    window.addEventListener("load", init, false);
+
+    $("#send-button").click(function (e) {
+        if(webSocket.readyState == WebSocket.OPEN) {
+            console.log("Sending Message ...");
+            getMessageAndSendToServer();
+            // put focus back in the textarea
+            $("#message-input").focus();
+        } else {
+            alert("Could not send data. Websocket is not open.");
+        }
+    });
+
+    // send the message when the user presses the <enter> key while in the textarea
+    $(window).on("keydown", function (e) {
+        if (e.which == 13) {
+            getMessageAndSendToServer();
+            return false;
+        }
+    });
+
+    // there’s a lot going on here:
+    // 1. get our message from the textarea.
+    // 2. append that message to our view/div.
+    // 3. create a json version of the message.
+    // 4. send the message to the server.
+    function getMessageAndSendToServer() {
+
+        // get the text from the textarea
+        messageInput = $("#message-input").val();
+
+        // clear the textarea
+        $("#message-input").val("");
+
+        // if the trimmed message was blank, return now
+        if ($.trim(messageInput) == "") {
+            return false;
+        }
+
+        // add the message to the view/div
+        appendClientMessageToView("Me", messageInput);
+
+        // send our json message to the server
+        sendToServer(messageInput);
+    }
+
+    // send the data to the server using the WebSocket
+    function sendToServer(message) {
+        if(webSocket.readyState == WebSocket.OPEN) {
+            // create the message as json
+            let jsonMessage = isJSON(message) ? JSON.parse(message) : { message: message };
+            consoleLog("SENT: " + JSON.stringify(jsonMessage));
+            webSocket.send(JSON.stringify(jsonMessage));
+        } else {
+            consoleLog("Could not send data. Websocket is not open.");
+        }
+    }
+
+    $("#connect-button").click(function (e) {
+        console.log("Connect ...");
+        wsUrlInput = $("#connect-input").val();
+        // put focus back in the textarea
+
+        if ($.trim(wsUrlInput) == "") {
+            alert("ws url can't be null");
+        } else {
+            connect(wsUrlInput + "?userId=" + userId);
+        }
+    });
+
+    $("#disconnect-button").click(function (e) {
+        console.log("Disconnect ...");
+        doDisconnect();
+    });
+
+    function doDisconnect(){
+        webSocket.close();
+    }
+
+    function isJSON(str) {
+        console.log(str);
+        if (typeof str == 'string') {
+            try {
+                var obj=JSON.parse(str);
+                if(typeof obj == 'object' && obj ){
+                    return true;
+                }else{
+                    return false;
+                }
+
+            } catch(e) {
+                console.log('error：'+str+'!!!'+e);
+                return false;
+            }
+        }
+        console.log('It is not a string!')
+    }
+
+</script>
 }

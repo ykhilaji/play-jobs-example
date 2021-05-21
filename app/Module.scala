@@ -8,7 +8,6 @@ class Module extends AbstractModule {
 
   def configure() = {
 
-   Kamon.init()
 
     bind(classOf[JobService]).toProvider(classOf[JobServiceProvider])
 
