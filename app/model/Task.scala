@@ -1,7 +1,6 @@
 package model
 
 import core.JsonImplicits.{dateReads, enumReads, enumWrites}
-
 import enum.Enum
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -9,6 +8,7 @@ import play.api.libs.json.Reads._
 import play.api.mvc.QueryStringBindable
 import org.joda.time.DateTime
 import model._
+import services.sockets.ProtocolV2.Payload
 
 
 case class TaskInfra(sid: String , info: String , data: JsValue , task: Option[TaskModel])

@@ -15,6 +15,7 @@ import services.actors.messages.NotificationActor
 class HomeController @Inject()(components: ControllerComponents)( implicit val actorSystem: ActorSystem, executionContext: ExecutionContext) extends AbstractController(components){
 
 
+  NotificationActor.startRegion(actorSystem)
 
 
   /**
@@ -26,7 +27,6 @@ class HomeController @Inject()(components: ControllerComponents)( implicit val a
    */
   def index() = Action { implicit request: Request[AnyContent] =>
 
-    NotificationActor.startRegion(actorSystem)
    println("------------------------------Actor ShardRegions have been started ----------.")
 
     Ok(views.html.index())

@@ -5,12 +5,11 @@ import play.api.mvc._
 
 import services.actors.messages.NotificationRegionComponents
 import play.api.libs.json._
-import javax.inject
+import javax.inject._
 import services.JobService
-import services.actors.Envelope
 
-@inject.Singleton
-class JobShardingController @inject.Inject()(
+@Singleton
+class JobShardingController @Inject()(
   jobService: JobService,
   cc: ControllerComponents)(implicit val actorSystem: ActorSystem ) extends AbstractController(cc) with NotificationRegionComponents {
 

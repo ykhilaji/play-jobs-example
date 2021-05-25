@@ -1,4 +1,4 @@
 package services.actors
 
 
-case class Envelope[I, P](id: I, payload: P)
+case class Envelope(id: String, payload: Any)

@@ -19,16 +19,4 @@ object NotificationProtocol extends ProtocolV2 {
   object TaskOut {
     implicit val taskFormat: Format[TaskOut] = Json.format[TaskOut]
   }
-
-  def receive(out: ActorRef): PartialFunction[Any, Unit] = {
-
-    case notify: String =>
-      out ! Notify(notify)
-
-    case data: JsValue =>
-      out ! TaskOut(data)
-    case a: Any =>
-      println("========Notification Unhandled Message=========")
-      println(a)
-  }: Receive
 }

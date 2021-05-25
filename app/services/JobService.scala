@@ -25,6 +25,7 @@ import scala.concurrent.ExecutionContext
 import model.TaskInfra
 import services.actors.Envelope
 import services.actors.messages._
+import services.sockets.ProtocolV2.Payload
 trait JobService {
 
   def onTask(userId: String, task: TaskInfra) : Unit
@@ -91,7 +92,7 @@ extends JobService with NotificationRegionComponents  {
   
   val completeWithDone: PartialFunction[Any, CompletionStrategy] = { case Done => CompletionStrategy.immediately }
 
-  val rateLimiter = Source.actorRef[Any](
+  val rateLimiter = Source.actorRef[Envelope](
     completionMatcher = completeWithDone,
     failureMatcher = PartialFunction.empty,
     bufferSize = 100000,
@@ -108,7 +109,7 @@ extends JobService with NotificationRegionComponents  {
   def actorSystem: ActorSystem = system
 
   def onTask(userId: String ,task: TaskInfra) : Unit =  {
-    _notificationRegion ! Envelope(userId, Json.toJson(task))
+    rateLimiter ! Envelope(userId, Json.toJson(task))
   }
   def onTest(userId: String) = {
      _notificationRegion ! Envelope(userId, s"hello ${userId}")
