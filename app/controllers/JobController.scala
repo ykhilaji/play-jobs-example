@@ -19,33 +19,39 @@ import play.api.libs.json.JsError
 import play.api.libs.json.Json
 
 @Singleton
-class JobController @Inject() (mock: Mock,jobService: JobService,components: ControllerComponents) (implicit system: ActorSystem, ec: ExecutionContext) extends  AbstractController(components) {
+class JobController @Inject()(mock: Mock,
+                              jobService: JobService,
+                              components: ControllerComponents)(
+    implicit system: ActorSystem,
+    ec: ExecutionContext)
+    extends AbstractController(components) {
 
-  def job(sid: String, tasks: Int) = Action { implicit request: Request[AnyContent] =>
+  def job(sid: String, tasks: Int) = Action {
+    implicit request: Request[AnyContent] =>
+      (1 to tasks) foreach { i =>
+        {
 
-    (1 to tasks) foreach {
-      i => {
+          akka.pattern.after(500 millis, using = system.scheduler) {
+            val dateFuture = mock.loadJson("task.json")
+            for {
+              data <- dateFuture
+            } yield {
+              val task = TaskModel.taskReads.reads(data) match {
+                case JsSuccess(value, path) => Some(value)
+                case JsError(errors)        => println(errors); None
+              }
+              val taskInfra =
+                TaskInfra(sid, s"task $i complet ", Json.toJson("sid"), task)
 
-        akka.pattern.after(500 millis, using = system.scheduler) {
-          val dateFuture = mock.loadJson("task.json")
-          for {
-            data <- dateFuture
-          } yield {
-          val task =  TaskModel.taskReads.reads(data) match {
-            case JsSuccess(value, path) => Some(value)
-            case JsError(errors) => println(errors); None
-          }         
-          val taskInfra = TaskInfra(sid, s"task $i complet ", Json.toJson("sid"), task)
-
-          Future.successful{
-            jobService.onTask(taskInfra)
+              Future.successful {
+                jobService.onTask(taskInfra)
+              }
+            }
           }
-          }
+
         }
-
       }
-    }
 
-    NoContent
+      NoContent
   }
 }

@@ -6,14 +6,13 @@ import akka.cluster.pubsub.DistributedPubSubMediator.{Subscribe, SubscribeAck}
 
 import scala.concurrent.duration._
 import akka.NotUsed
-import org.joda.time.{ DateTime }
+import org.joda.time.{DateTime}
 
-import akka.stream.{ Materializer, OverflowStrategy}
+import akka.stream.{Materializer, OverflowStrategy}
 import akka.stream.scaladsl.Sink
 import akka.stream.scaladsl.Source
 import akka.stream.CompletionStrategy
 import akka.Done
-
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -24,8 +23,10 @@ import model.TaskModel
 import model.TaskInfra
 import protocol._
 
-
-class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: Materializer) extends Actor with ActorLogging {
+class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem,
+                                            mat: Materializer)
+    extends Actor
+    with ActorLogging {
   val topic = s"jobs:${sid}"
 
   override def preStart(): Unit = {
@@ -60,34 +61,34 @@ class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem, mat: M
       Supervision.Stop
   }
 
-  val completeWithDone: PartialFunction[Any, CompletionStrategy] = { case Done => CompletionStrategy.immediately }
+  val completeWithDone: PartialFunction[Any, CompletionStrategy] = {
+    case Done => CompletionStrategy.immediately
+  }
 
-  val throttler = Source.actorRef[JsValue](
-    completionMatcher = completeWithDone,
-    failureMatcher = PartialFunction.empty,
-    bufferSize = 100000, 
-    OverflowStrategy.dropNew)
-    .groupedWithin(100, 3 seconds) 
-    .map((infos: Seq[JsValue]) => Json.obj(
-      "type" -> "TasksComplete",
-      "info" -> infos
+  val throttler = Source
+    .actorRef[JsValue](completionMatcher = completeWithDone,
+                       failureMatcher = PartialFunction.empty,
+                       bufferSize = 100000,
+                       OverflowStrategy.dropNew)
+    .groupedWithin(100, 3 seconds)
+    .map(
+      (infos: Seq[JsValue]) =>
+        Json.obj(
+          "type" -> "TasksComplete",
+          "info" -> infos
       ))
     .log(self.path.name)
-     .withAttributes(
-      ActorAttributes.dispatcher("task-stream-dispatcher") and 
+    .withAttributes(ActorAttributes.dispatcher("task-stream-dispatcher") and
       ActorAttributes.supervisionStrategy(decider))
     .to(Sink.foreach(out !))
     .run()
-
 
   def receive = {
     case TaskComplete(task) =>
       println(s"task complete----------------: {}, ${task.sid}, ${task.info}")
       out ! Json.toJson(task)
 
-      
     case SubscribeAck(Subscribe(`topic`, None, `self`)) ⇒
       log.info("subscribing")
   }
 }
-

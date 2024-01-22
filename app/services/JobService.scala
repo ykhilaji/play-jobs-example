@@ -28,11 +28,15 @@ import model.TaskInfra
 
 trait JobService {
 
-  def onTask(task: TaskInfra) : Unit
+  def onTask(task: TaskInfra): Unit
 }
 
 @Singleton
-class JobServiceDPSImpl @Inject() (lifecycle: ApplicationLifecycle)(implicit system: ActorSystem, mat: Materializer, ex: ExecutionContext) extends JobService  {
+class JobServiceDPSImpl @Inject()(lifecycle: ApplicationLifecycle)(
+    implicit system: ActorSystem,
+    mat: Materializer,
+    ex: ExecutionContext)
+    extends JobService {
 
   val cluster = Cluster(system)
 
@@ -49,15 +53,19 @@ class JobServiceDPSImpl @Inject() (lifecycle: ApplicationLifecycle)(implicit sys
     Future.successful(system.terminate())
   }
 
-  val completeWithDone: PartialFunction[Any, CompletionStrategy] = { case Done => CompletionStrategy.immediately }
+  val completeWithDone: PartialFunction[Any, CompletionStrategy] = {
+    case Done => CompletionStrategy.immediately
+  }
 
   val pubsub = DistributedPubSub(system).mediator
 
-  val rateLimiter = Source.actorRef[DistributedPubSubMediator.Publish](
-    completionMatcher = completeWithDone,
-    failureMatcher = PartialFunction.empty,
-    bufferSize = 100000, 
-    OverflowStrategy.dropNew)
+  val rateLimiter = Source
+    .actorRef[DistributedPubSubMediator.Publish](completionMatcher =
+                                                   completeWithDone,
+                                                 failureMatcher =
+                                                   PartialFunction.empty,
+                                                 bufferSize = 100000,
+                                                 OverflowStrategy.dropNew)
     .throttle(
       elements = 1000, // 1000 messages per second
       per = 1 second,
@@ -66,18 +74,19 @@ class JobServiceDPSImpl @Inject() (lifecycle: ApplicationLifecycle)(implicit sys
     )
     .to(Sink.actorRef(pubsub, NotUsed, ex => "FAILED: " + ex.getMessage))
     .run()
-    
 
   def onTask(task: TaskInfra) = {
     import protocol.TaskComplete
     val topic = s"jobs:${task.sid}"
-    rateLimiter ! Publish(topic , TaskComplete(task))   
+    rateLimiter ! Publish(topic, TaskComplete(task))
   }
 
 }
-
-
-@Singleton 
-class JobServiceProvider @Inject()(lifecycle: ApplicationLifecycle)(implicit system: ActorSystem,mat: Materializer, ex: ExecutionContext) extends javax.inject.Provider[JobService] {
-  lazy val get: JobService =  new JobServiceDPSImpl(lifecycle)
+@Singleton
+class JobServiceProvider @Inject()(lifecycle: ApplicationLifecycle)(
+    implicit system: ActorSystem,
+    mat: Materializer,
+    ex: ExecutionContext)
+    extends javax.inject.Provider[JobService] {
+  lazy val get: JobService = new JobServiceDPSImpl(lifecycle)
 }

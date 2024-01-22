@@ -15,14 +15,15 @@ import play.libs.streams.ActorFlow
 import protocol._
 //import protocol.Messages.messageFlowTransformer
 @Singleton
-class WebSocketController @Inject()(wsClient: WSClient, 
-                                    components: ControllerComponents)(implicit system: ActorSystem, ec: ExecutionContext, mat: Materializer) extends AbstractController(components) {
-  
-  def ws(sid: String) = WebSocketUtil.get[JsValue] { (out: ActorRef) ⇒
+class WebSocketController @Inject()(wsClient: WSClient,
+                                    components: ControllerComponents)(
+    implicit system: ActorSystem,
+    ec: ExecutionContext,
+    mat: Materializer)
+    extends AbstractController(components) {
 
+  def ws(sid: String) = WebSocketUtil.get[JsValue] { (out: ActorRef) ⇒
     Props(new PageActor(sid, out))
   }
 
- 
 }
-

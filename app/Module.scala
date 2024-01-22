@@ -6,12 +6,8 @@ import kamon.Kamon
 
 class Module extends AbstractModule {
 
-  def configure() = {
-
-   Kamon.init()
-
+  override def configure() = {
     bind(classOf[JobService]).toProvider(classOf[JobServiceProvider])
-
 
   }
 

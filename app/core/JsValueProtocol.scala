@@ -1,3 +1,3 @@
 package core
 
-trait JsValueProtocol extends Product with Serializable 
+trait JsValueProtocol extends Product with Serializable
