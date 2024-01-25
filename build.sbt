@@ -26,3 +26,5 @@ scapegoatVersion in ThisBuild := "1.3.3"
 resolvers += Resolver.sbtPluginRepo("releases")
 
 resolvers += Resolver.jcenterRepo // Adds Bi
+
+
