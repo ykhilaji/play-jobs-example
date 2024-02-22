@@ -1,8 +1,6 @@
 package protocol
 
 import model.TaskInfra
-import play.api.libs.json._
-import model.TaskModel
 
 sealed trait Msg extends core.ActorProtocol
 

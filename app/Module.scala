@@ -1,8 +1,6 @@
 import com.google.inject.AbstractModule
 
 import services._
-import play.api.Configuration
-import kamon.Kamon
 import repository.BordereauModel._
 
 class Module extends AbstractModule {

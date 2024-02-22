@@ -18,13 +18,10 @@ import akka.Done
 import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.Publish
 import akka.cluster.pubsub.DistributedPubSubMediator
-import actors.PageActor
-import play.api.libs.json.Json
 
-import core._
 import scala.concurrent.ExecutionContext
-import model.TaskModel
 import model.TaskInfra
+import core.BasicLogger
 
 trait JobService {
 
@@ -36,16 +33,17 @@ class JobServiceDPSImpl @Inject()(lifecycle: ApplicationLifecycle)(
     implicit system: ActorSystem,
     mat: Materializer,
     ex: ExecutionContext)
-    extends JobService {
+    extends JobService
+    with BasicLogger {
 
   val cluster = Cluster(system)
 
   cluster.registerOnMemberUp {
-    Logger.debug("Member is ready.")
+    LOG.debug("Member is ready.")
   }
 
   cluster.registerOnMemberRemoved {
-    Logger.debug("Member is down, stopping actor system.")
+    LOG.debug("Member is down, stopping actor system.")
     system.terminate()
   }
 

@@ -8,7 +8,6 @@ import scala.collection.generic.CanBuildFrom
 import scala.language.higherKinds
 import play.api.db.Database
 import concurrent._
-import akka.event.slf4j.Logger
 
 /**
   * An SQL transaction monad.

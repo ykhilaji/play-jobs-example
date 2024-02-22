@@ -10,4 +10,4 @@ project/plugins/project/
 .bloop/
 .metals/
 .vscode/
-project/*
+project/project

@@ -11,7 +11,9 @@ object JsValue {
 
   /* Enables the sending of a JsValue to Anorm/JDBC */
   implicit def jsValueToStatement = new ToStatement[JsValue] {
-    def set(s: java.sql.PreparedStatement, index: Int, aValue: JsValue) {
+    def set(s: java.sql.PreparedStatement,
+            index: Int,
+            aValue: JsValue): Unit = {
       val pgObject = new PGobject()
       pgObject.setType("jsonb")
       pgObject.setValue(Json.toJson(aValue).toString)

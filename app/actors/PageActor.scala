@@ -5,8 +5,6 @@ import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Subscribe, SubscribeAck}
 
 import scala.concurrent.duration._
-import akka.NotUsed
-import org.joda.time.{DateTime}
 
 import akka.stream.{Materializer, OverflowStrategy}
 import akka.stream.scaladsl.Sink
@@ -14,13 +12,9 @@ import akka.stream.scaladsl.Source
 import akka.stream.CompletionStrategy
 import akka.Done
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import play.api.libs.json.Reads._
 import akka.stream.ActorAttributes
 import akka.stream.Supervision
-import model.TaskModel
-import model.TaskInfra
 import protocol._
 
 class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem,

@@ -1,5 +1,12 @@
 organization in ThisBuild := "play-jobs"
-scalaVersion in ThisBuild := "2.12.11"
+
+inThisBuild(
+  List(
+    scalaVersion := "2.13.12", // 2.13.12, or 3.x
+    semanticdbEnabled := true, // enable SemanticDB
+    semanticdbVersion := scalafixSemanticdb.revision // only required for Scala 2.x
+  )
+)
 
 name := """play-jobs"""
 
@@ -21,10 +28,8 @@ lazy val root = (project in file("."))
                                 filters))
   .settings(routesGenerator := InjectedRoutesGenerator)
 
-scapegoatVersion in ThisBuild := "1.3.3"
+scapegoatVersion in ThisBuild := "1.3.11"
 
 resolvers += Resolver.sbtPluginRepo("releases")
 
 resolvers += Resolver.jcenterRepo // Adds Bi
-
-

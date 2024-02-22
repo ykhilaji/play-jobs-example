@@ -1,10 +1,13 @@
 package controllers
 
 import javax.inject._
-import play.api._
 import play.api.mvc._
 import scala.concurrent.ExecutionContext
 import akka.actor.ActorSystem
+import model.TaskType
+import model.TaskStatus
+import play.api.libs.json._
+import core.JsonImplicits.{dateReads, enumReads, enumWrites}
 
 /**
   * This controller creates an `Action` to handle HTTP requests to the
@@ -24,6 +27,7 @@ class HomeController @Inject()(components: ControllerComponents)(
     * a path of `/`.
     */
   def index() = Action { implicit request: Request[AnyContent] =>
+    val json = Json.obj("key" -> TaskStatus.Submitted.toString())
     Ok(views.html.index())
   }
 }

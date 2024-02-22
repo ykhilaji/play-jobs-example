@@ -1,6 +1,6 @@
 package core
 
-import com.alexitc.play.tracer.{PlayRequestId, PlayRequestTracerLoggerFactory}
+import core.tracer.{PlayRequestId, PlayRequestTracerLoggerFactory}
 
 /* Use as a mixin to get a properly named Logger for your class */
 trait Logger {

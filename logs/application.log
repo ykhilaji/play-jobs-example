@@ -1,0 +1,20 @@
+2024-02-22 13:50:47,946 [INFO] from play.api.db.DefaultDBApi in play-dev-mode-akka.actor.default-dispatcher-4 - Database [default] initialized
+2024-02-22 13:50:47,948 [INFO] from play.api.db.HikariCPConnectionPool in play-dev-mode-akka.actor.default-dispatcher-4 - Creating Pool for datasource 'default'
+2024-02-22 13:50:53,138 [INFO] from akka.event.slf4j.Slf4jLogger in application-akka.actor.default-dispatcher-6 - Slf4jLogger started
+2024-02-22 13:50:53,750 [INFO] from akka.remote.artery.ArteryTransport in application-akka.actor.default-dispatcher-6 - Remoting started with transport [Artery tcp]; listening on address [akka://application@127.0.0.1:2551] with UID [3506436647599881498]
+2024-02-22 13:50:53,777 [INFO] from akka.cluster.Cluster in application-akka.actor.default-dispatcher-6 - Cluster Node [akka://application@127.0.0.1:2551] - Starting up, Akka version [2.6.20] ...
+2024-02-22 13:50:53,834 [INFO] from akka.cluster.Cluster in application-akka.actor.default-dispatcher-6 - Cluster Node [akka://application@127.0.0.1:2551] - Registered cluster JMX MBean [akka:type=Cluster]
+2024-02-22 13:50:53,834 [INFO] from akka.cluster.Cluster in application-akka.actor.default-dispatcher-6 - Cluster Node [akka://application@127.0.0.1:2551] - Started up successfully
+2024-02-22 13:50:53,930 [INFO] from akka.cluster.sbr.SplitBrainResolver in application-akka.actor.default-dispatcher-17 - SBR started. Config: strategy [StaticQuorum], stable-after [20 seconds], down-all-when-unstable [15 seconds], selfUniqueAddress [akka://application@127.0.0.1:2551#3506436647599881498], selfDc [default].
+2024-02-22 13:50:53,942 [INFO] from akka.cluster.Cluster in application-akka.actor.default-dispatcher-6 - Cluster Node [akka://application@127.0.0.1:2551] - Node [akka://application@127.0.0.1:2551] is JOINING itself (with roles [dc-default], version [0.0.0]) and forming new cluster
+2024-02-22 13:50:53,944 [INFO] from akka.cluster.Cluster in application-akka.actor.default-dispatcher-6 - Cluster Node [akka://application@127.0.0.1:2551] - is the new leader among reachable nodes (more leaders may exist)
+2024-02-22 13:50:53,954 [INFO] from akka.cluster.Cluster in application-akka.actor.default-dispatcher-6 - Cluster Node [akka://application@127.0.0.1:2551] - Leader is moving node [akka://application@127.0.0.1:2551] to [Up]
+2024-02-22 13:50:53,989 [INFO] from akka.cluster.sbr.SplitBrainResolver in application-akka.actor.default-dispatcher-17 - This node is now the leader responsible for taking SBR decisions among the reachable nodes (more leaders may exist).
+2024-02-22 13:50:54,464 [WARN] from play.filters.headers.SecurityHeadersConfig in play-dev-mode-akka.actor.default-dispatcher-4 - play.filters.headers.contentSecurityPolicy is deprecated in 2.7.0.  Please use play.filters.csp.CSPFilter instead.
+2024-02-22 13:50:54,468 [INFO] from play.api.http.EnabledFilters in play-dev-mode-akka.actor.default-dispatcher-4 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-02-22 13:50:54,514 [INFO] from play.api.Play in play-dev-mode-akka.actor.default-dispatcher-4 - Application started (Dev) (no global state)

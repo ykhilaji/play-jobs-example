@@ -6,7 +6,6 @@ import play.api.libs.json._
 
 import play.api.Environment
 import javax.inject.Inject
-import play.Logger
 
 class Mock @Inject()(env: Environment)(
     implicit executionContext: ExecutionContext) {

@@ -1,15 +1,10 @@
 package model
 
 package model
-import scala.util.Try
-import scala.util.matching.Regex
-import java.time.LocalDate
 
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import enum.Enum
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
+import ai.x.play.json.Encoders.encoder
 
 case class AddressModel(
     reference: Option[String],

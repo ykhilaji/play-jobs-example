@@ -7,7 +7,6 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 
 import javax.inject._
-import play.api._
 import play.api.mvc._
 
 import services.JobService

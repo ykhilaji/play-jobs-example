@@ -1,14 +1,13 @@
 package model
 
-import core.JsonImplicits.{dateReads, enumReads, enumWrites}
-
 import enum.Enum
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.mvc.QueryStringBindable
 import org.joda.time.DateTime
-import model._
+import core.JsonImplicits.{dateReads, enumReads, enumWrites}
+import org.eclipse.jetty.util.thread.Scheduler.Task
 
 case class TaskInfra(sid: String,
                      info: String,
@@ -37,7 +36,7 @@ object TaskModel {
   type JobId = Long
 
   // Objects/methods used to parse and create JSON
-  implicit val taskReads =
+  implicit val taskReads: Reads[TaskModel] =
     (
       (__ \ "id").read[TaskId] and
         (__ \ "user_id").read[UserId] and
@@ -54,7 +53,7 @@ object TaskModel {
         (__ \ "print_results").readNullable[JsValue]
     )(TaskModel.apply _)
 
-  implicit val taskWrites = OWrites[TaskModel] { task =>
+  implicit val taskWrites: Writes[TaskModel] = OWrites[TaskModel] { task =>
     Json.obj(
       "id" -> task.id,
       "data" -> task.data,
@@ -73,7 +72,7 @@ object TaskModel {
 
 object TaskInfra {
 
-  implicit val taskReads =
+  implicit val taskReads: Reads[TaskInfra] =
     (
       (__ \ "sid").read[String] and
         (__ \ "info").read[String] and
@@ -81,7 +80,7 @@ object TaskInfra {
         (__ \ "task").readNullable[TaskModel]
     )(TaskInfra.apply _)
 
-  implicit val taskWrites = OWrites[TaskInfra] { task =>
+  implicit val taskWrites: OWrites[TaskInfra] = OWrites[TaskInfra] { task =>
     Json.obj(
       "sid" -> task.sid,
       "info" -> task.info,
@@ -107,7 +106,23 @@ object TaskStatus {
 
   case object Warning extends TaskStatus
 
-  implicit val enum: Enum[TaskStatus] = Enum.derived[TaskStatus]
+  implicit val statusEnum: Enum[TaskStatus] = Enum.derived[TaskStatus]
+  implicit val format: Format[TaskStatus] =
+    core.JsonImplicits.enumFormat(statusEnum)
+
+  def toString(task: TaskStatus): String =
+    task match {
+      case Submitted      => "Submitted"
+      case Successful     => "Successful"
+      case TechnicalError => "TechnicalError"
+      case BusinessError  => "BusinessError"
+      case Cancelled      => "Cancelled"
+      case Warning        => "Warning"
+    }
+
+  def fromString(string: String): Option[TaskStatus] =
+    statusEnum.values.toSeq.find(order => toString(order) == string)
+
 }
 
 sealed trait TaskType
@@ -135,21 +150,24 @@ object TaskType {
   val desktopTasks: Set[TaskType] =
     Set(PrintAuto, PrintUnite, PrintHistory, ImportFile)
 
-  implicit val enum: Enum[TaskType] = Enum.derived[TaskType]
+  implicit val enumTask: Enum[TaskType] = Enum.derived[TaskType]
 
-  implicit def printerTypeQueryStringBinder(
-      implicit stringBinder: QueryStringBindable[String]) =
+  implicit def taskTypeQueryStringBindable(
+      implicit stringBinder: QueryStringBindable[String])
+    : QueryStringBindable[TaskType] = {
     new QueryStringBindable[TaskType] {
-
-      def bind(
-          key: String,
-          params: Map[String, Seq[String]]): Option[Either[String, TaskType]] =
-        params.get(s"${key}") match {
-          case Some(Seq(str)) => enum.decodeOpt(str).map(Right(_))
+      override def bind(key: String, params: Map[String, Seq[String]])
+        : Option[Either[String, TaskType]] = {
+        params.get(s"$key") match {
+          case Some(Seq(str)) => enumTask.decodeOpt(str).map(Right(_))
           case _              => None
         }
+      }
 
-      def unbind(key: String, printerType: TaskType): String =
-        stringBinder.unbind(key, enum.encode(printerType))
+      override def unbind(key: String, value: TaskType): String = {
+        stringBinder.unbind(key, enumTask.encode(value))
+      }
     }
+  }
+
 }
