@@ -13,7 +13,7 @@ object Dependencies {
   }
 
   object play {
-    val version = "2.8.1"
+    val version = "2.9.4"
     val json = "com.typesafe.play" %% "play-json" % version
     val json_joda = "com.typesafe.play" %% "play-json-joda" % version
    /*  val iteratees = "com.typesafe.play" %% "play-iteratees" % "2.6.1"

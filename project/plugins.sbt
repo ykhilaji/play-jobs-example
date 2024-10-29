@@ -1,8 +1,8 @@
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.4.0")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.16")
 
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.16")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.4")
 // To keep an homogeneous code style
 addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.14")
 //addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
@@ -24,3 +24,6 @@ addSbtPlugin("com.tapad" % "sbt-docker-compose" % "1.0.34")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.11.1")
 
 addSbtPlugin("com.lightbend.sbt" % "sbt-javaagent" % "0.1.6")
+
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+

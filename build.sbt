@@ -2,9 +2,7 @@ organization in ThisBuild := "play-jobs"
 
 inThisBuild(
   List(
-    scalaVersion := "2.13.12", // 2.13.12, or 3.x
-    semanticdbEnabled := true, // enable SemanticDB
-    semanticdbVersion := scalafixSemanticdb.revision // only required for Scala 2.x
+    scalaVersion := "2.13.14"
   )
 )
 
@@ -27,6 +25,8 @@ lazy val root = (project in file("."))
                                 evolutions,
                                 filters))
   .settings(routesGenerator := InjectedRoutesGenerator)
+
+ThisBuild / evictionErrorLevel := Level.Info
 
 scapegoatVersion in ThisBuild := "1.3.11"
 
