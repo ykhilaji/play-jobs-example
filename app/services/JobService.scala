@@ -1,27 +1,29 @@
 package services
 
-import akka.actor._
+import org.apache.pekko.actor._
 import javax.inject._
 
 import scala.concurrent.duration._
-import akka.NotUsed
-import akka.stream.{Materializer, OverflowStrategy, ThrottleMode}
-import akka.stream.scaladsl.Sink
-import akka.stream.scaladsl.Source
+import org.apache.pekko.NotUsed
+import org.apache.pekko.stream.{Materializer, OverflowStrategy, ThrottleMode}
+import org.apache.pekko.stream.scaladsl.{Sink, Source}
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
-import akka.cluster.Cluster
+import org.apache.pekko.cluster.Cluster
 
 import scala.concurrent.Future
-import akka.stream.CompletionStrategy
-import akka.Done
-import akka.cluster.pubsub.DistributedPubSub
-import akka.cluster.pubsub.DistributedPubSubMediator.Publish
-import akka.cluster.pubsub.DistributedPubSubMediator
+import org.apache.pekko.stream.CompletionStrategy
+import org.apache.pekko.Done
+import org.apache.pekko.cluster.pubsub.DistributedPubSub
+import org.apache.pekko.cluster.pubsub.DistributedPubSubMediator.{
+  Publish,
+  Subscribe
+}
 
 import scala.concurrent.ExecutionContext
 import model.TaskInfra
 import core.BasicLogger
+import org.apache.pekko.cluster.pubsub.DistributedPubSubMediator
 
 trait JobService {
 
@@ -30,8 +32,8 @@ trait JobService {
 
 @Singleton
 class JobServiceDPSImpl @Inject()(lifecycle: ApplicationLifecycle)(
-    implicit system: ActorSystem,
-    mat: Materializer,
+    implicit mat: Materializer,
+    system: ActorSystem,
     ex: ExecutionContext)
     extends JobService
     with BasicLogger {

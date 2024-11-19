@@ -1,27 +1,29 @@
 package actors
-
-import akka.actor._
-import akka.cluster.pubsub.DistributedPubSub
-import akka.cluster.pubsub.DistributedPubSubMediator.{Subscribe, SubscribeAck}
+import org.apache.pekko.actor._
+import org.apache.pekko.actor.Props
+import org.apache.pekko.cluster.pubsub.DistributedPubSub
+import org.apache.pekko.cluster.pubsub.DistributedPubSubMediator.{
+  Subscribe,
+  SubscribeAck
+}
 
 import scala.concurrent.duration._
 
-import akka.stream.{Materializer, OverflowStrategy}
-import akka.stream.scaladsl.Sink
-import akka.stream.scaladsl.Source
-import akka.stream.CompletionStrategy
-import akka.Done
+import org.apache.pekko.stream.{Materializer, OverflowStrategy}
+import org.apache.pekko.stream.scaladsl.{Sink, Source}
+import org.apache.pekko.stream.CompletionStrategy
+import org.apache.pekko.Done
 
 import play.api.libs.json._
-import akka.stream.ActorAttributes
-import akka.stream.Supervision
+import org.apache.pekko.stream.ActorAttributes
+import org.apache.pekko.stream.Supervision
 import protocol._
 
-class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem,
-                                            mat: Materializer)
+class PageActor(sid: String, out: ActorRef)(implicit system: ActorSystem)
     extends Actor
     with ActorLogging {
   val topic = s"jobs:${sid}"
+  implicit val materializer = Materializer.matFromSystem(system)
 
   override def preStart(): Unit = {
     val mediator = DistributedPubSub(context.system).mediator

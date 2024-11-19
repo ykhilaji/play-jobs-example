@@ -3,11 +3,11 @@ package controllers
 import javax.inject._
 import play.api.mvc._
 import scala.concurrent.ExecutionContext
-import akka.actor.ActorSystem
 import model.TaskType
 import model.TaskStatus
 import play.api.libs.json._
 import core.JsonImplicits.{dateReads, enumReads, enumWrites}
+import org.apache.pekko.actor.ActorSystem
 
 /**
   * This controller creates an `Action` to handle HTTP requests to the

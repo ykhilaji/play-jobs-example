@@ -1,4 +1,7 @@
+import org.apache.pekko.actor.typed.{ActorRef, Behavior}
+import org.apache.pekko.stream.Materializer
 import com.google.inject.AbstractModule
+import scala.concurrent.ExecutionContext
 
 import services._
 import repository.BordereauModel._

@@ -1,13 +1,13 @@
 package core.sql
 
 import java.sql.Connection
-import akka.actor.ActorSystem
 import scala.util.{Failure, Success}
 import scala.concurrent.Future
 import scala.collection.generic.CanBuildFrom
 import scala.language.higherKinds
 import play.api.db.Database
 import concurrent._
+import org.apache.pekko.actor.ActorSystem
 
 /**
   * An SQL transaction monad.

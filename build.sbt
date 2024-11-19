@@ -19,6 +19,7 @@ lazy val root = (project in file("."))
   .settings(Settings.commonPlayFront: _*)
   .settings(
     libraryDependencies ++= Seq(guice,
+                                ws,
                                 openId,
                                 ehcache,
                                 jdbc,

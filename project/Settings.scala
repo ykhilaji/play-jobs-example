@@ -30,8 +30,6 @@ object Settings {
       "-language:postfixOps",
       "-Ywarn-dead-code"
     ),
-    scalacOptions += "-P:semanticdb:synthetics:on",
-
       // name dist with timestamp
     packageName in Universal := s"${name.value}-${version.value}-$timestamp",
     // skip scaladoc when running dist
@@ -72,7 +70,19 @@ object Settings {
    //   Dependencies.play.request_tracer,
       Dependencies.play.json_extensions,
 
-      Dependencies.akka.kryo_serialization,
+      Dependencies.pekko.actor,
+      Dependencies.pekko.kryo_serialization,
+      Dependencies.pekko.testKit,
+      Dependencies.pekko.slf4j,
+      Dependencies.pekko.cluster,
+      Dependencies.pekko.cluster_tools,
+      Dependencies.pekko.stream,
+      Dependencies.pekko.jackson,
+      Dependencies.pekko.actor_typed,
+      Dependencies.pekko.cluster_typed,
+
+
+    /*   Dependencies.akka.kryo_serialization,
       Dependencies.akka.actor,
       Dependencies.akka.slf4j,
       Dependencies.akka.cluster,
@@ -80,7 +90,7 @@ object Settings {
       Dependencies.akka.stream,
       Dependencies.akka.jackson,
       Dependencies.akka.akka_typed,
-      Dependencies.akka.akka_cluster_typed,
+      Dependencies.akka.akka_cluster_typed, */
      // Dependencies.akka.coordination,
      // Dependencies.akka.remote,
      // Dependencies.akka.protobuf,
@@ -89,7 +99,7 @@ object Settings {
       Dependencies.circuitBreaker.core,
 
       Dependencies.db.anorme,
-      Dependencies.enum.core,
+      Dependencies.`enum`.core,
       Dependencies.opencvs.core,
 
       Dependencies.scalatest.play,

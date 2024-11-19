@@ -13,9 +13,9 @@ object Dependencies {
   }
 
   object play {
-    val version = "2.9.4"
-    val json = "com.typesafe.play" %% "play-json" % version
-    val json_joda = "com.typesafe.play" %% "play-json-joda" % version
+    val version = "3.0.4"
+    val json = "org.playframework" %% "play-json" % version
+    val json_joda = "org.playframework" %% "play-json-joda" % version
    /*  val iteratees = "com.typesafe.play" %% "play-iteratees" % "2.6.1"
     val reactive_streams = "com.typesafe.play" %% "play-iteratees-reactive-streams" % "2.6.1" */
     //val request_tracer = "com.alexitc" %% "play-request-tracer" % "0.1.0"
@@ -72,6 +72,20 @@ object Dependencies {
     val core = "com.zaxxer" % "HikariCP" % version
   }
 
+  object pekko {
+    val pekkoVersion = "1.1.2"
+    val kryo_serialization = "io.altoo" %% "pekko-kryo-serialization" % "1.0.0"
+    val actor =   "org.apache.pekko" %% "pekko-actor" % pekkoVersion
+    val testKit = "org.apache.pekko" %% "pekko-testkit" % pekkoVersion % Test
+    val slf4j = "org.apache.pekko" %% "pekko-slf4j" % pekkoVersion
+    val cluster = "org.apache.pekko" %% "pekko-cluster" % pekkoVersion
+    val cluster_tools = "org.apache.pekko" %% "pekko-cluster-tools" % pekkoVersion
+    val stream = "org.apache.pekko" %% "pekko-stream" % pekkoVersion
+    val jackson = "org.apache.pekko" %% "pekko-serialization-jackson" % pekkoVersion
+    val actor_typed = "org.apache.pekko" %% "pekko-actor-typed" % pekkoVersion
+    val cluster_typed = "org.apache.pekko" %% "pekko-cluster-typed" % pekkoVersion
+
+  }
   object akka {
     val version = "2.6.20"
     val kryo_serialization = "io.altoo" %% "akka-kryo-serialization" % "2.4.3"

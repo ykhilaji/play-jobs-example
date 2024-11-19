@@ -1,7 +1,5 @@
 package controllers
 
-import akka.actor._
-
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -16,6 +14,8 @@ import model.TaskInfra
 import play.api.libs.json.JsSuccess
 import play.api.libs.json.JsError
 import play.api.libs.json.Json
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.pattern.after
 
 @Singleton
 class JobController @Inject()(mock: Mock,
@@ -30,7 +30,7 @@ class JobController @Inject()(mock: Mock,
       (1 to tasks) foreach { i =>
         {
 
-          akka.pattern.after(500 millis, using = system.scheduler) {
+          after(500 millis, using = system.scheduler) {
             val dateFuture = mock.loadJson("task.json")
             for {
               data <- dateFuture

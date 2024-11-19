@@ -1,24 +1,25 @@
 package websockets
 
-import akka.actor._
-import akka.stream.Materializer
+import org.apache.pekko.actor._
+import org.apache.pekko.stream.Materializer
 import play.api.libs.json.JsValue
-import play.api.libs.streams.ActorFlow
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import play.api.mvc.WebSocket
 
 import scala.reflect.ClassTag
+import play.api.libs.streams.ActorFlow
 
 object WebSocketUtil {
 
-  def get[T: ClassTag](props: (ActorRef) ⇒ Props)(
+  def get[T: ClassTag](props: (ActorRef) => Props)(
       implicit system: ActorSystem,
       ec: ExecutionContext,
       mat: Materializer): WebSocket = {
     WebSocket.acceptOrResult[JsValue, JsValue] { implicit request =>
-      Future.successful(Right(ActorFlow.actorRef((out: ActorRef) ⇒ props(out))))
+      Future.successful(
+        Right(ActorFlow.actorRef((out: ActorRef) => props(out))))
 
     }
   }
@@ -29,7 +30,8 @@ object WebSocketUtil {
       mat: Materializer): WebSocket = {
     WebSocket.acceptOrResult[String, String] { implicit request =>
       println(s"==========${request.queryString("channel")}")
-      Future.successful(Right(ActorFlow.actorRef((out: ActorRef) ⇒ props(out))))
+      Future.successful(
+        Right(ActorFlow.actorRef((out: ActorRef) => props(out))))
 
     }
   }

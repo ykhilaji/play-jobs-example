@@ -2,7 +2,7 @@ addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.16")
 
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.4")
+addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.5")
 // To keep an homogeneous code style
 addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.14")
 //addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
