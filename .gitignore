@@ -10,4 +10,5 @@ project/plugins/project/
 .bloop/
 .metals/
 .vscode/
+logs/
 project/project
