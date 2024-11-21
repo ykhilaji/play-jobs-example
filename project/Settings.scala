@@ -116,8 +116,8 @@ object Settings {
 
       Dependencies.commonIo.core,
 
-      Dependencies.kamon.bundele,
-      Dependencies.kamon.prometheus,
+     // Dependencies.kamon.bundele,
+     // Dependencies.kamon.prometheus,
 
       Dependencies.mockito.core % Test,
       Dependencies.akka.testkit % Test

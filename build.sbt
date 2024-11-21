@@ -2,7 +2,7 @@ organization in ThisBuild := "play-jobs"
 
 inThisBuild(
   List(
-    scalaVersion := "2.13.14"
+    scalaVersion := "2.13.13"
   )
 )
 
@@ -11,11 +11,7 @@ name := """play-jobs"""
 buildInfoPackage := "buildInfo"
 
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala,
-                 JavaAgent,
-                 SbtWeb,
-                 UniversalDeployPlugin,
-                 BuildInfoPlugin)
+  .enablePlugins(PlayScala, SbtWeb, UniversalDeployPlugin, BuildInfoPlugin)
   .settings(Settings.commonPlayFront: _*)
   .settings(
     libraryDependencies ++= Seq(guice,
@@ -26,6 +22,9 @@ lazy val root = (project in file("."))
                                 evolutions,
                                 filters))
   .settings(routesGenerator := InjectedRoutesGenerator)
+  .settings(
+    run / fork := true
+  )
 
 ThisBuild / evictionErrorLevel := Level.Info
 
