@@ -31,11 +31,11 @@ object Settings {
       "-Ywarn-dead-code"
     ),
       // name dist with timestamp
-    packageName in Universal := s"${name.value}-${version.value}-$timestamp",
+    (Universal / packageName) := s"${name.value}-${version.value}-$timestamp",
     // skip scaladoc when running dist
-    publishArtifact in (Compile, packageDoc) := false,
-    publishArtifact in packageDoc := false,
-    sources in (Compile, doc) := Seq.empty
+    (Compile / packageDoc / publishArtifact) := false,
+    (packageDoc / publishArtifact) := false,
+    (Compile / doc / sources) := Seq.empty
   ) ++ scapegoatSettings ++ scalaFmtSettings
 
   lazy val commonPlay = common ++ Seq(
@@ -48,17 +48,17 @@ object Settings {
     ),
    
 
-    evictionWarningOptions in update := EvictionWarningOptions.default
+    (update / evictionWarningOptions) := EvictionWarningOptions.default
     .withWarnTransitiveEvictions(false)
     .withWarnDirectEvictions(false),
     
     pipelineStages := Seq(digest),
 
-    excludeFilter in digest := "*.zip" || "*.exe",
+    (digest / excludeFilter) := "*.zip" || "*.exe",
 
     // dont include local.conf in dist
-    mappings in Universal := {
-      val origMappings = (mappings in Universal).value
+    (Universal / mappings) := {
+      val origMappings = ((Universal / mappings)).value
       origMappings.filterNot { case (_, file) => file.endsWith("local.conf") }
     },
     libraryDependencies ++= Seq(
@@ -128,8 +128,8 @@ object Settings {
 
   lazy val commonPlayFront = commonPlay ++ Seq(
     pipelineStages := Seq(digest, gzip),
-    includeFilter in digest := "*.js" || "*.css" || "*.html",
-    includeFilter in gzip := "*.js" || "*.css" || "*.html",
+    (digest / includeFilter) := "*.js" || "*.css" || "*.html",
+    (gzip / includeFilter) := "*.js" || "*.css" || "*.html",
     libraryDependencies ++= Seq()
   )
 
@@ -142,7 +142,7 @@ object Settings {
       setReleaseVersion,
       commitReleaseVersion,
       tagRelease,
-      releaseStepTask(publish in Universal),
+      releaseStepTask((Universal / publish)),
       setNextVersion,
       commitNextVersion,
       pushChanges

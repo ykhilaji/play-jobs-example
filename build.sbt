@@ -1,4 +1,4 @@
-organization in ThisBuild := "play-jobs"
+(ThisBuild / organization) := "play-jobs"
 
 inThisBuild(
   List(
@@ -28,7 +28,7 @@ lazy val root = (project in file("."))
 
 ThisBuild / evictionErrorLevel := Level.Info
 
-scapegoatVersion in ThisBuild := "1.3.11"
+(ThisBuild / scapegoatVersion) := "1.3.11"
 
 resolvers += Resolver.sbtPluginRepo("releases")
 
